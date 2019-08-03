@@ -63,7 +63,7 @@ ROOT_URLCONF = 'sixtyfour.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['sixtyfour/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -71,6 +71,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+				'sixtyfour.context_processors.site_branding',
             ],
         },
     },
@@ -127,7 +128,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+	'sixtyfour/static'
+]
 
+
+# Default Site Branding.
+
+SITE_NAME = 'sixtyfour'
 
 # Local environment overrides
 try:

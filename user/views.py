@@ -15,7 +15,7 @@ def post_listing(request, username, page=1):
 	return render(request, 'user/listing.html', {'user':user,'posts':posts})
 
 def post_detail(request, username, entry):
-	# TODO: create templates
-	post = Post.objects.filter(user__username=username, id=entry)
-	return HttpResponse(str(post),content_type="text/plain")
+	post = Post.objects.get(user__username=username, id=entry)
+	print(post)
+	return render(request, 'user/post.html', {'post':post})
 

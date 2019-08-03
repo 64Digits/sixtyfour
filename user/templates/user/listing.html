@@ -5,7 +5,7 @@
 <ul>
 {% for post in posts %}
 <li>
-	<a href="#">
+	<a href="/user/{{user.username}}/post/{{post.id}}">
 		{{ post.title }}
 	</a>
 </li>

@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>{{ site_name }}</title>
+		<link rel="stylesheet" type="text/css" href="{% static "css/default.css" %}"/>
+		{% block styles %}
+			{# area for other views to add styles #}
+		{% endblock %}
+	</head>
+	<body>
+		<h1>{{ site_name }}</h1>
+		<div>
+		{% block content %}
+			<p>Nothing to see here.</p>
+		{% endblock %}
+		</div>
+		{# include common scripts here, outside scripts block #}
+		{% block scripts %}
+			{# area for other views to add scripts #}
+		{% endblock %}
+	</body>
+</html>

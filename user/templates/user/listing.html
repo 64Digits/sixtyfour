@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ user.username }}</h2>
+<ul>
+{% for post in posts %}
+<li>
+	<a href="#">
+		{{ post.title }}
+	</a>
+</li>
+{% endfor %}
+{% endblock %}

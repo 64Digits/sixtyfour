@@ -10,4 +10,23 @@
 	</a>
 </li>
 {% endfor %}
+
+{% if posts.paginator.num_pages > 1 %}
+	<div class="listing-pagination">
+		{% if posts.has_previous %}
+			<a href="/user/{{user.username}}/page/1">&laquo; First</a>
+			<a href="/user/{{user.username}}/page/{{posts.previous_page_number}}">Previous</a>
+		{% endif %}
+
+		<span>
+			Page {{ page }} of {{ posts.paginator.num_pages }}
+		</span>
+
+		{% if posts.has_next %}
+			<a href="/user/{{user.username}}/page/{{posts.next_page_number}}">Next</a>
+			<a href="/user/{{user.username}}/page/{{posts.paginator.num_pages}}">&raquo; Last</a>
+		{% endif %}
+	</div>
+{% endif %}
+
 {% endblock %}

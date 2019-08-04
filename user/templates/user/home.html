@@ -28,22 +28,6 @@
 {% endfor %}
 </ul>
 
-{% if posts.paginator.num_pages > 1 %}
-	<div class="listing-pagination">
-		{% if posts.has_previous %}
-			<a href="{% url 'sixtyfour:front' %}">&laquo; First</a>
-			<a href="{% url 'sixtyfour:front' posts.previous_page_number %}">Previous</a>
-		{% endif %}
-
-		<span>
-			Page {{ posts.number }} of {{ posts.paginator.num_pages }}
-		</span>
-
-		{% if posts.has_next %}
-			<a href="{% url 'sixtyfour:front' posts.next_page_number %}">Next</a>
-			<a href="{% url 'sixtyfour:front' posts.paginator.num_pages %}">Last &raquo;</a>
-		{% endif %}
-	</div>
-{% endif %}
+{% include 'include/pagination.html' with page=posts %}
 
 {% endblock %}

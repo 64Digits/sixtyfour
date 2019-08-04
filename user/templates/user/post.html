@@ -51,23 +51,7 @@
 	{% endfor %}
 	</div>
 
-	{% if comments.paginator.num_pages > 1 %}
-	<div class="listing-pagination">
-		{% if comments.has_previous %}
-			<a href="{% url 'user:post' user.username post.id 1 %}">&laquo; First</a>
-			<a href="{% url 'user:post' user.username post.id comments.previous_page_number %}">Previous</a>
-		{% endif %}
-
-		<span>
-			Page {{ comments.number }} of {{ comments.paginator.num_pages }}
-		</span>
-
-		{% if comments.has_next %}
-			<a href="{% url 'user:post' user.username post.id comments.next_page_number %}">Next</a>
-			<a href="{% url 'user:post' user.username post.id comments.paginator.num_pages %}">Last &raquo;</a>
-		{% endif %}
-	</div>
-	{% endif %}
+	{% include 'include/pagination.html' with page=comments %}
 
 {% endif %}
 {% endblock %}

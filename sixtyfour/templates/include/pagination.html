@@ -1,0 +1,17 @@
+{% if page.paginator.num_pages > 1 %}
+	<div class="listing-pagination">
+		{% if page.has_previous %}
+			<a href="{% url 'sixtyfour:front' %}">&laquo; First</a>
+			<a href="{% url 'sixtyfour:front' page.previous_page_number %}">Previous</a>
+		{% endif %}
+
+		<span>
+			Page {{ page.number }} of {{ page.paginator.num_pages }}
+		</span>
+
+		{% if page.has_next %}
+			<a href="{% url 'sixtyfour:front' page.next_page_number %}">Next</a>
+			<a href="{% url 'sixtyfour:front' page.paginator.num_pages %}">Last &raquo;</a>
+		{% endif %}
+	</div>
+{% endif %}

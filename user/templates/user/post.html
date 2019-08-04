@@ -30,6 +30,17 @@
         <div class="post-content">
             {{ post.entry }}
         </div>
+
+        <div class="post-comment-list">
+            {% for comment in comments %}
+                <div class="post-comment">
+                    <span class="post-comment-user">{{ comment.user }}</span>
+                    <span class="post-comment-content">
+                        {{ comment.entry }}
+                    </span>
+                </div>
+            {% endfor %}
+        </div>
     {% endif %}
 {% endif %}
 {% endblock %}

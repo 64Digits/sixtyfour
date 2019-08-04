@@ -22,5 +22,10 @@ def post_listing(request, username, page=1):
 def post_detail(request, username, entry):
 	user = get_user_model().objects.get(username=username)
 	post = Post.objects.get(user__username=username, id=entry)
+<<<<<<< HEAD
 	return render(request, 'user/post.html', {'user':user, 'post':post})
+=======
+	comments = Comment.objects.filter(post__id=entry).order_by('created')
+	return render(request, 'user/post.html', {'user':user, 'post':post, 'comments':comments})
+>>>>>>> Add comments to post detail template
 

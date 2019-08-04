@@ -2,6 +2,9 @@
 
 {% block content %}
 <h2>Recent Posts</h2>
+
+{% pagination posts 'sixtyfour:front' %}
+
 <ul>
 {% for post in posts %}
 <li>
@@ -23,6 +26,9 @@
             {% if post.pinned %}
                 <span class="placeholder-icon-pinned">📌</span>
             {% endif %}
+        </div>
+        <div class="post-preview">
+            {{ post.formatted|truncatewords_html:200}}
         </div>
 </li>
 {% endfor %}

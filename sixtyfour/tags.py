@@ -7,13 +7,8 @@ register = template.Library()
 
 @register.inclusion_tag('include/pagination.html', takes_context=True)
 def pagination(context, page, view, *args, **kwargs):
-	#view = kwargs['view']
 	context['view'] = view
-	#kwargs.pop('view', None)
-	
-	#page = kwargs['page']
 	context['page'] = page
-	#kwargs.pop('page', None)
 	
 	if page.has_previous():
 		context['page_first'] = reverse(view, kwargs=kwargs)
@@ -32,4 +27,4 @@ def pagination(context, page, view, *args, **kwargs):
 def user(user):
 	url=reverse('user:listing', kwargs={'username':user.username})
 	return format_html('<a href="{}">{}</a>',mark_safe(url),user.username)
-	
+

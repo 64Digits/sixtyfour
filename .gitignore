@@ -4,3 +4,5 @@ db.sqlite3
 *.swp
 *.swo
 .vscode
+.node_modules
+npm-debug.log

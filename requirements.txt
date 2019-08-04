@@ -1,0 +1,3 @@
+django-static-precompiler[libsass]>=1.7
+libsass
+bbcode

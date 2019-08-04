@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
-import bbcode
+from sixtyfour.formatters import bbcode64
 
 # Create your models here.
 def get_sentinel_user():
@@ -26,7 +26,7 @@ class Post(models.Model):
 
 	@property
 	def formatted(self):
-		return bbcode.render_html(self.entry)
+		return bbcode64(self)
 
 	def __str__(self):
 		return '[%s] %s' % (self.user.username,self.title)
@@ -45,3 +45,6 @@ class Comment(models.Model):
 		on_delete=models.SET(get_sentinel_user)
 	)
 
+	@property
+	def formatted(self):
+		return bbcode64(self)

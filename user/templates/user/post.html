@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if post %}
+    {% if post.deleted %}
+        <h2>Post Deleted</h2>
+        <div>
+            This post was deleted.
+        </div>
+    {% else %}
+        <h2 class="post-title">
+            {{ post.title }}
+        </h2>
+
+        <div class="post-info">
+            <span class="post-info-user">Submitted by {{post.user}}</span>
+            <span class="post-info-date">
+                {{ post.created }}
+            </span>
+            
+            {% if post.locked %}
+                <span class="placeholder-icon-lock">🔒</span>
+            {% endif %}
+
+            {% if post.pinned %}
+                <span class="placeholder-icon-pinned">📌</span>
+            {% endif %}
+        </div>
+
+        <div class="post-content">
+            {{ post.entry }}
+        </div>
+    {% endif %}
+{% endif %}
+{% endblock %}

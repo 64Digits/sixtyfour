@@ -28,7 +28,7 @@
         </div>
 
         <div class="post-content">
-            {{ post.entry }}
+            {{ post.formatted|safe }}
         </div>
     {% endif %}
 {% endif %}

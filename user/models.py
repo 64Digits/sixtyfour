@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+import bbcode
 
 # Create your models here.
 def get_sentinel_user():
@@ -10,7 +11,7 @@ class Post(models.Model):
 	title = models.CharField(max_length=100)
 	entry = models.TextField()
 
-	created = models.DateTimeField(auto_now=True)
+	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 
 	show_recent = models.BooleanField(default=True)
@@ -23,13 +24,17 @@ class Post(models.Model):
 		on_delete=models.SET(get_sentinel_user)
 	)
 
+	@property
+	def formatted(self):
+		return bbcode.render_html(self.entry)
+
 	def __str__(self):
 		return '[%s] %s' % (self.user.username,self.title)
 
 class Comment(models.Model):
 	entry = models.TextField()
 
-	created = models.DateTimeField(auto_now=True)
+	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 	
 	deleted = models.BooleanField(default=False)

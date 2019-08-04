@@ -1,0 +1,13 @@
+{
+  "name": "sixtyfour",
+  "description": "The Site Code for 64Digits.com",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "autoprefixer": "^9.6.1",
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.15.0",
+    "postcss-cli": "^6.1.3"
+  }
+}

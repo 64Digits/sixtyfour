@@ -1,4 +1,6 @@
 {% load static %}
+{% load sass_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -6,7 +8,8 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{ site_name }}</title>
-		<link rel="stylesheet" type="text/css" href="{% static "css/default.css" %}"/>
+		<link rel="stylesheet" type="text/css" href="{% sass_src 'css/default.scss' %}"/>
+
 		{% block styles %}
 			{# area for other views to add styles #}
 		{% endblock %}
@@ -19,6 +22,8 @@
 		{% endblock %}
 		</div>
 		{# include common scripts here, outside scripts block #}
+		<scripts src="{% static "popper.js/dist/popper.min.js" %}"></scripts>
+		<scripts src="{% static "jquery/dist/jquery.min.js" %}"></scripts>
 		{% block scripts %}
 			{# area for other views to add scripts #}
 		{% endblock %}

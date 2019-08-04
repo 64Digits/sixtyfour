@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sass_processor'
 ]
 
 MIDDLEWARE = [
@@ -129,9 +130,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-	'sixtyfour/static'
+STATICFILES_DIRS = (
+	os.path.join(BASE_DIR, 'sixtyfour/static'),
+    os.path.join(BASE_DIR, 'node_modules')
+)
+
+STATICFILES_FINDERS = [
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    'sass_processor.finders.CssFinder',
 ]
+
+NODE_MODULES_URL = STATIC_URL + 'node_modules/'
+
+SASS_PROCESSOR_ROOT = 'sixtyfour/static/compiled'
 
 
 # Default Site Branding.

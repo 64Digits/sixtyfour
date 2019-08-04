@@ -1,5 +1,12 @@
+$enable_rounded: false;
+$primary: rgb(175, 31, 31);
+
 @import "node_modules/bootstrap/scss/bootstrap";
 
 body {
 	font-family:sans-serif;
+}
+
+main {
+	padding-top:4rem;
 }

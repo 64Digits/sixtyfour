@@ -6,3 +6,5 @@ db.sqlite3
 .vscode
 node_modules
 npm-debug.log
+package-lock.json
+sixtyfour/static/compiled/css/*.*

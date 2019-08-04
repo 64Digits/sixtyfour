@@ -15,12 +15,21 @@
 		{% endblock %}
 	</head>
 	<body>
-		<h1><a href="{% url 'sixtyfour:front' %}">{{ site_name }}</a></h1>
-		<div>
+		{% include 'include/nav.html' %}
+<main role="main" class="container">
+		<div class="hidden"><h1>{{ site_name }}</h1></div>
+		<div class="row">
+		<div class="col-md-8">
 		{% block content %}
 			<p>Nothing to see here.</p>
 		{% endblock %}
 		</div>
+		<div class="col-md-4">
+		{% block sidebar %}
+		{% endblock %}
+		</div>
+		</div>
+</main>
 		{# include common scripts here, outside scripts block #}
 		<scripts src="{% static "popper.js/dist/popper.min.js" %}"></scripts>
 		<scripts src="{% static "jquery/dist/jquery.min.js" %}"></scripts>

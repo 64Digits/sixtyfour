@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Recent Posts</h2>
+<ul>
+{% for post in posts %}
+<li>
+	<h3>
+	<a href="{% url 'user:post' post.user post.id %}">
+		{{ post.title }}
+	</a>
+	</h3>
+        <div class="post-info">
+            <span class="post-info-user">Submitted by <a href="{% url 'user:index' post.user %}">{{post.user}}</a></span>
+            <span class="post-info-date">
+                {{ post.created }}
+            </span>
+            
+            {% if post.locked %}
+                <span class="placeholder-icon-lock">🔒</span>
+            {% endif %}
+
+            {% if post.pinned %}
+                <span class="placeholder-icon-pinned">📌</span>
+            {% endif %}
+        </div>
+</li>
+{% endfor %}
+</ul>
+
+{% if posts.paginator.num_pages > 1 %}
+	<div class="listing-pagination">
+		{% if posts.has_previous %}
+			<a href="{% url 'sixtyfour:front' %}">&laquo; First</a>
+			<a href="{% url 'sixtyfour:front' posts.previous_page_number %}">Previous</a>
+		{% endif %}
+
+		<span>
+			Page {{ page }} of {{ posts.paginator.num_pages }}
+		</span>
+
+		{% if posts.has_next %}
+			<a href="{% url 'sixtyfour:front' posts.next_page_number %}">Next</a>
+			<a href="{% url 'sixtyfour:front' posts.paginator.num_pages %}">Last &raquo;</a>
+		{% endif %}
+	</div>
+{% endif %}
+
+{% endblock %}

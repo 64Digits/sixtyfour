@@ -18,9 +18,17 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 
+from user.views import home_page
+
+sixtyfour = ([
+	path('', home_page, name='front'),
+	path('page/<int:page>', home_page, name='front'),
+], 'sixtyfour')
+
 urlpatterns = [
+	path('', include(sixtyfour)),
 	path('admin/', admin.site.urls),
-	path('user/', include('user.urls'))
+	path('user/', include('user.urls')),
 ] 
 
 if settings.DEBUG:

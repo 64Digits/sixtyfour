@@ -6,20 +6,21 @@ from .models import Post, Comment
 
 from django.contrib.auth import get_user_model
 
+def home_page(request, page=1):
+	post_set = Post.objects.filter(deleted=0).order_by('-created')
+	paginator = Paginator(post_set, 10)
+	posts = paginator.get_page(page)
+	return render(request, 'user/home.html', {'posts':posts, 'page':page})
+
 def post_listing(request, username, page=1):
 	user = get_user_model().objects.get(username=username)
-
-	# QuerySets are already optimized for pagination (E.G: They lazy load as needed,
-	# so even loading 'all' of the objects doesn't actually load all of them)
-	# This might still be a future performance limiter.
-
 	post_set = Post.objects.filter(user__username=username).order_by('-created')
 	paginator = Paginator(post_set, 10)
 	posts = paginator.get_page(page)
-
 	return render(request, 'user/listing.html', {'user':user, 'posts':posts, 'page':page})
 
 def post_detail(request, username, entry):
+	user = get_user_model().objects.get(username=username)
 	post = Post.objects.get(user__username=username, id=entry)
-	return render(request, 'user/post.html', {'post':post})
+	return render(request, 'user/post.html', {'user':user, 'post':post})
 

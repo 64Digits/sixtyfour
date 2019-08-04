@@ -1,4 +1,6 @@
 from django.urls import reverse
+from django.utils.safestring import mark_safe
+from django.utils.html import format_html
 
 from django import template
 register = template.Library()
@@ -25,3 +27,9 @@ def pagination(context, page, view, *args, **kwargs):
 		context['page_last'] = reverse(view, kwargs=kwargs)
 
 	return context
+
+@register.simple_tag
+def user(user):
+	url=reverse('user:listing', kwargs={'username':user.username})
+	return format_html('<a href="{}">{}</a>',mark_safe(url),user.username)
+	

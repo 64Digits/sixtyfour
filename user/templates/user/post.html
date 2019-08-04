@@ -13,7 +13,7 @@
         </h2>
 
         <div class="post-info">
-            <span class="post-info-user">Submitted by <a href="{% url 'user:listing' post.user %}">{{post.user}}</a></span>
+            <span class="post-info-user">Submitted by {% user post.user %}</span>
             <span class="post-info-date">
                 {{ post.created }}
             </span>
@@ -41,7 +41,7 @@
             {{ comment.formatted|safe }}
         </div>
         <div class="comment-info">
-			<span class="comment-info-user">&mdash;<a href="{% url 'user:listing' comment.user %}">{{comment.user}}</a></span>
+			<span class="comment-info-user">&mdash;{% user comment.user %}</span>
 			<span class="post-info-date">
 				{{ comment.created }}
 			</span>

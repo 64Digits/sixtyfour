@@ -73,6 +73,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 				'sixtyfour.context_processors.site_branding',
             ],
+			'builtins': ['sixtyfour.tags'],
         },
     },
 ]

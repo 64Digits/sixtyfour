@@ -17,7 +17,7 @@ def post_listing(request, username, page=1):
 	post_set = Post.objects.filter(user__username=username, deleted=0).order_by('-created')
 	paginator = Paginator(post_set, 10)
 	posts = paginator.get_page(page)
-	return render(request, 'user/listing.html', {'user':user, 'posts':posts})
+	return render(request, 'user/listing.html', {'op':user, 'posts':posts})
 
 def post_detail(request, username, entry, page=1):
 	user = get_user_model().objects.get(username=username)
@@ -25,5 +25,5 @@ def post_detail(request, username, entry, page=1):
 	comments_set = Comment.objects.filter(post=post, deleted=0)
 	paginator = Paginator(comments_set, 10)
 	comments = paginator.get_page(page)
-	return render(request, 'user/post.html', {'user':user, 'post':post, 'comments':comments})
+	return render(request, 'user/post.html', {'op':user, 'post':post, 'comments':comments})
 

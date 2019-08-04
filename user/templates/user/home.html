@@ -11,7 +11,7 @@
 	</a>
 	</h3>
         <div class="post-info">
-            <span class="post-info-user">Submitted by <a href="{% url 'user:index' post.user %}">{{post.user}}</a></span>
+            <span class="post-info-user">Submitted by <a href="{% url 'user:listing' post.user %}">{{post.user}}</a></span>
             <span class="post-info-date">
                 {{ post.created }}
             </span>
@@ -28,6 +28,6 @@
 {% endfor %}
 </ul>
 
-{% include 'include/pagination.html' with page=posts %}
+{% pagination posts 'sixtyfour:front' %}
 
 {% endblock %}

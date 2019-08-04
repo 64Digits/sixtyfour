@@ -1,17 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ user.username }}</h2>
+<h2>{{ op.username }}</h2>
 <ul>
 {% for post in posts %}
 <li>
-	<a href="{% url 'user:post' user.username post.id %}">
+	<a href="{% url 'user:post' op.username post.id %}">
 		{{ post.title }}
 	</a>
 </li>
 {% endfor %}
 </ul>
 
-{% include 'include/pagination.html' with page=posts %}
+{% pagination posts 'user:listing' username=op.username %}
 
 {% endblock %}

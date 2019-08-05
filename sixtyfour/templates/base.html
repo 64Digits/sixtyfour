@@ -30,8 +30,8 @@
 		</div>
 </main>
 		{# include common scripts here, outside scripts block #}
-		<scripts src="{% static "popper.js/dist/popper.min.js" %}"></scripts>
-		<scripts src="{% static "jquery/dist/jquery.min.js" %}"></scripts>
+		<script src="{% static "jquery.min.js" %}"></script>
+		<script src="{% static "bootstrap.bundle.min.js" %}"></script>
 		{% block scripts %}
 			{# area for other views to add scripts #}
 		{% endblock %}

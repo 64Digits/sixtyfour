@@ -9,9 +9,12 @@
             This post was deleted.
         </div>
     {% else %}
-
 		<h3 class="mb-0"><a class="text-dark" href="{{ post_url }}">{{ post.title }}</a></h3>
 		<div class="mb-1">
+			<span class="text-muted">
+				Posted by {% user post.user %} on {{ post.created }}
+			</span>
+
 			{% if post.locked %}
 				<span class="placeholder-icon-lock">🔒</span>
 			{% endif %}
@@ -19,9 +22,8 @@
 			{% if post.pinned %}
 				<span class="placeholder-icon-pinned">📌</span>
 			{% endif %}
-			<span class="text-muted">{{ post.created }}</span>
 		</div>
-        <div class="post-content">
+        <div class="post-content my-4">
             {{ post.formatted|safe }}
         </div>
     {% endif %}

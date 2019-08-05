@@ -132,7 +132,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
 	os.path.join(BASE_DIR, 'sixtyfour/static'),
-    os.path.join(BASE_DIR, 'node_modules')
+    os.path.join(BASE_DIR, 'node_modules/jquery/dist'),
+    os.path.join(BASE_DIR, 'node_modules/bootstrap/dist/js'),
 )
 
 STATICFILES_FINDERS = [

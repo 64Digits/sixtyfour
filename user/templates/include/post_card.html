@@ -1,8 +1,12 @@
 {% url 'user:post' post.user post.id as post_url %}
-<div class="row no-gutters border overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-	<div class="col p-4 d-flex flex-column position-static">
+<div class="row no-gutters border overflow-hidden flex-sm-row mb-5 shadow-sm h-md-250 position-relative">
+	<div class="col p-4 flex-grow-1 position-static">
 		<h3 class="mb-0"><a class="text-dark" href="{{ post_url }}">{{ post.title }}</a></h3>
 		<div class="mb-1">
+			<span class="text-muted">
+				Posted by {% user post.user %} on {{ post.created }}
+			</span>
+
 			{% if post.locked %}
 				<span class="placeholder-icon-lock">🔒</span>
 			{% endif %}
@@ -10,23 +14,21 @@
 			{% if post.pinned %}
 				<span class="placeholder-icon-pinned">📌</span>
 			{% endif %}
-			<span class="text-muted">{{ post.created }}</span>
 		</div>
-		<p class="card-text mb-auto">
-			{{ post.formatted|truncatewords_html:50}}
+		<p class="card-text my-4">
+			{{ post.formatted|truncatewords_html:50 }}
 		</p>
-		<div class="mb-1">
+		<div class="mt-4">
 			<a href="{{ post_url }}">Read Post
 				<span class="text-muted">({{ post.comment_set.count }} Comments)</span>
 			</a>
 		</div>
 	</div>
 	{% if front %}
-	<div class="col-auto d-flex flex-column d-lg-block bg-light">
-		<div class="card-avatar"><svg class="bd-placeholder-img" width="200" height="200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="50%" y="50%" fill="#eceeef" dx="-2em" dy=".3em">Avatar</text></svg></div>
-		<div class="card-profile">
-			<strong class="d-inline-block mb-2 text-primary">{% user post.user %}</strong>
-			<div class="mb-1 text-muted">{{ post.created }}</div>
+	<div class="col-auto d-none d-lg-block bg-light">
+		<div class="card-avatar bg-secondary" style="width:10em;height:10em;"></div>
+		<div class="card-profile text-center my-2">
+			<strong class="d-inline-block text-primary">{% user post.user %}</strong>
 		</div>
 	</div>
 	{% endif %}

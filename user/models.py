@@ -7,6 +7,22 @@ from sixtyfour.formatters import bbcode64
 def get_sentinel_user():
 	return get_user_model().objects.get_or_create(username='deleted')[0]
 
+class Profile(models.Model):
+	avatar = models.URLField()
+	profile = models.TextField()
+	location = models.CharField(max_length=40)
+	hit_counter = models.IntegerField()
+	old_password = models.CharField(max_length=512, default=None)
+	
+	user = models.OneToOneField(
+		settings.AUTH_USER_MODEL,
+		on_delete = models.CASCADE,
+		primary_key = True
+	)
+
+	def __str__(self):
+		return 'Profile: %s' % (self.user.username)
+
 class Post(models.Model):
 	title = models.CharField(max_length=100)
 	entry = models.TextField()

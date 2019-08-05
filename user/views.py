@@ -26,4 +26,3 @@ def post_detail(request, username, entry, page=1):
 	paginator = Paginator(comments_set, 10)
 	comments = paginator.get_page(page)
 	return render(request, 'user/post.html', {'op':user, 'post':post, 'comments':comments})
-

@@ -14,10 +14,9 @@
 			{# area for other views to add styles #}
 		{% endblock %}
 	</head>
-	<body>
+	<body class="bg-white">
 		{% include 'include/nav.html' %}
 <main role="main" class="container">
-		<div class="hidden"><h1>{{ site_name }}</h1></div>
 		<div class="row">
 		<div class="col-md-8">
 		{% block content %}

@@ -1,38 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Recent Posts</h2>
+<h2 class="mb-4">Recent Posts</h2>
 
-{% pagination posts 'sixtyfour:front' %}
-
-<ul>
+<div class="post-listing">
 {% for post in posts %}
-<li>
-	<h3>
-	<a href="{% url 'user:post' post.user post.id %}">
-		{{ post.title }}
-	</a>
-	</h3>
-        <div class="post-info">
-            <span class="post-info-user">Submitted by {% user post.user %}</span>
-            <span class="post-info-date">
-                {{ post.created }}
-            </span>
-            
-            {% if post.locked %}
-                <span class="placeholder-icon-lock">🔒</span>
-            {% endif %}
-
-            {% if post.pinned %}
-                <span class="placeholder-icon-pinned">📌</span>
-            {% endif %}
-        </div>
-        <div class="post-preview">
-            {{ post.formatted|truncatewords_html:200}}
-        </div>
-</li>
+	{% include "include/post_card.html" with front=True %}
 {% endfor %}
-</ul>
+</div>
 
 {% pagination posts 'sixtyfour:front' %}
 

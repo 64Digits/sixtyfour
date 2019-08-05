@@ -1,16 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>{{ op.username }}</h2>
-<ul>
+{% include "include/user_header.html" %}
+<h2 class="mb-4">Recent Posts</h2>
+<div class="post-listing">
 {% for post in posts %}
-<li>
-	<a href="{% url 'user:post' op.username post.id %}">
-		{{ post.title }}
-	</a>
-</li>
+	{% include "include/post_card.html" %}
 {% endfor %}
-</ul>
+</div>
 
 {% pagination posts 'user:listing' username=op.username %}
 

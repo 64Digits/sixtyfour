@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% include "include/user_header.html" %}
 {% if post %}
     {% if post.deleted %}
         <h2>Post Deleted</h2>
@@ -8,46 +9,27 @@
             This post was deleted.
         </div>
     {% else %}
-        <h2 class="post-title">
-            {{ post.title }}
-        </h2>
 
-        <div class="post-info">
-            <span class="post-info-user">Submitted by {% user post.user %}</span>
-            <span class="post-info-date">
-                {{ post.created }}
-            </span>
-            
-            {% if post.locked %}
-                <span class="placeholder-icon-lock">🔒</span>
-            {% endif %}
+		<h3 class="mb-0"><a class="text-dark" href="{{ post_url }}">{{ post.title }}</a></h3>
+		<div class="mb-1">
+			{% if post.locked %}
+				<span class="placeholder-icon-lock">🔒</span>
+			{% endif %}
 
-            {% if post.pinned %}
-                <span class="placeholder-icon-pinned">📌</span>
-            {% endif %}
-        </div>
-
+			{% if post.pinned %}
+				<span class="placeholder-icon-pinned">📌</span>
+			{% endif %}
+			<span class="text-muted">{{ post.created }}</span>
+		</div>
         <div class="post-content">
             {{ post.formatted|safe }}
         </div>
     {% endif %}
 
-	<h3>Comments</h3>
-	<hr/>
+	<h3 class="mb-4">Comments</h3>
 	<div class="comments">
 	{% for comment in comments %}
-	<div class="comment">
-        <div class="post-content">
-            {{ comment.formatted|safe }}
-        </div>
-        <div class="comment-info">
-			<span class="comment-info-user">&mdash;{% user comment.user %}</span>
-			<span class="post-info-date">
-				{{ comment.created }}
-			</span>
-        </div>
-		<hr/>
-	</div>
+	{% include "include/comment.html" %}
 	{% endfor %}
 	</div>
 

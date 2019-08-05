@@ -4,6 +4,6 @@ from django.utils.safestring import mark_safe
 
 def bbcode64(entry):
 	parser = Parser(newline='</p><p>')
-	entry = parser.format(entry.entry)
+	entry = parser.format(entry.entry.strip())
 	return format_html('<p>{}</p>',mark_safe(entry))
 

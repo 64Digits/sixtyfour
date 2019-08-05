@@ -1,12 +1,16 @@
 $enable_rounded: false;
 $primary: rgb(175, 31, 31);
+$light: #e9ecef;
 
 @import "node_modules/bootstrap/scss/bootstrap";
 
-body {
-	font-family:sans-serif;
+.nav-spacer {
+	margin:3.8rem 0rem;
 }
 
-main {
-	padding-top:4rem;
+.nav-scroller {
+    position: relative;
+    z-index: 2;
+    height: 2.75rem;
+    overflow-y: hidden;
 }

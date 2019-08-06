@@ -49,7 +49,7 @@ class Post(models.Model):
 
 	posts = models.Manager()
 	posts_front = FrontPostManager()
-	posts_news = FrontPostManager()
+	posts_news = NewsPostManager()
 
 	@property
 	def formatted(self):
@@ -57,6 +57,9 @@ class Post(models.Model):
 
 	def __str__(self):
 		return '[%s] %s' % (self.user.username,self.title)
+
+	class Meta:
+		ordering = ['-created']
 
 class Comment(models.Model):
 	entry = models.TextField()
@@ -75,3 +78,6 @@ class Comment(models.Model):
 	@property
 	def formatted(self):
 		return bbcode64(self)
+
+	class Meta:
+		ordering = ['created']

@@ -28,7 +28,7 @@ class UserPostListView(ListContextView):
 	
 	def get_queryset(self):
 		user = self.kwargs['username']
-		return Post.posts.filter(user__username=user).order_by('-created')
+		return Post.posts.filter(user__username=user)
 
 class PostCommentListView(ListContextView):
 	paginate_by = 10
@@ -41,4 +41,4 @@ class PostCommentListView(ListContextView):
 	
 	def get_queryset(self):
 		entry = self.kwargs['entry']
-		return Comment.objects.filter(post__id=entry).order_by('-created')
+		return Comment.objects.filter(post__id=entry)

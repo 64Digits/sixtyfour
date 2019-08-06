@@ -6,20 +6,23 @@ from django import template
 register = template.Library()
 
 @register.inclusion_tag('include/pagination.html', takes_context=True)
-def pagination(context, page, view, *args, **kwargs):
-	context['view'] = view
-	context['page'] = page
-	
-	if page.has_previous():
-		context['page_first'] = reverse(view, kwargs=kwargs)
-		kwargs['page'] = page.previous_page_number()
-		context['page_previous'] = reverse(view, kwargs=kwargs)
-	
-	if page.has_next():
-		kwargs['page'] = page.next_page_number()
-		context['page_next'] = reverse(view, kwargs=kwargs)
-		kwargs['page'] = page.paginator.num_pages
-		context['page_last'] = reverse(view, kwargs=kwargs)
+def pagination(context, *args, **kwargs):
+	if context['is_paginated']:
+		page = context['page_obj']
+		view = context['request'].resolver_match.view_name	
+		kwargs = context['request'].resolver_match.kwargs
+
+		if page.has_previous():
+			kwargs.pop('page', None)
+			context['page_first'] = reverse(view, kwargs=kwargs)
+			kwargs['page'] = page.previous_page_number()
+			context['page_previous'] = reverse(view, kwargs=kwargs)
+		
+		if page.has_next():
+			kwargs['page'] = page.next_page_number()
+			context['page_next'] = reverse(view, kwargs=kwargs)
+			kwargs['page'] = page.paginator.num_pages
+			context['page_last'] = reverse(view, kwargs=kwargs)
 
 	return context
 
@@ -27,4 +30,4 @@ def pagination(context, page, view, *args, **kwargs):
 def user(user):
 	url=reverse('user:listing', kwargs={'username':user.username})
 	return format_html('<a href="{}">{}</a>',mark_safe(url),user.username)
-
+	

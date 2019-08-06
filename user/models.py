@@ -3,7 +3,6 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from sixtyfour.formatters import bbcode64
 
-# Create your models here.
 def get_sentinel_user():
 	return get_user_model().objects.get_or_create(username='deleted')[0]
 
@@ -23,6 +22,14 @@ class Profile(models.Model):
 	def __str__(self):
 		return 'Profile: %s' % (self.user.username)
 
+class FrontPostManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False, pinned=False, show_recent=True)
+
+class NewsPostManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False, pinned=True, show_recent=True)
+
 class Post(models.Model):
 	title = models.CharField(max_length=100)
 	entry = models.TextField()
@@ -39,6 +46,10 @@ class Post(models.Model):
 		settings.AUTH_USER_MODEL,
 		on_delete=models.SET(get_sentinel_user)
 	)
+
+	posts = models.Manager()
+	posts_front = FrontPostManager()
+	posts_news = FrontPostManager()
 
 	@property
 	def formatted(self):

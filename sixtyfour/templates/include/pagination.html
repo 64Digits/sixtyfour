@@ -1,7 +1,7 @@
-{% if page.paginator.num_pages > 1 %}
+{% if is_paginated %}
 <nav aria-label="Pagination">
 	<ul class="pagination justify-content-center">
-	{% if page.has_previous %}
+	{% if page_obj.has_previous %}
 		<li class="page-item">
 			<a class="page-link" href="{{ page_previous }}">
 				<span aria-disabled="true">&laquo;</span>
@@ -12,15 +12,15 @@
 				<span>1</span>
 			</a>
 		</li>
-		{% if page.number > 3 %}
+		{% if page_obj.number > 3 %}
 		<li class="page-item disabled">
 			<span class="page-link">...</span>
 		</li>
 		{% endif %}
-		{% if page.number > 2 %}
+		{% if page_obj.number > 2 %}
 		<li class="page-item">
 			<a class="page-link" href="{{ page_previous }}" aria-label="Previous">
-				<span>{{ page.number|add:"-1" }}</span>
+				<span>{{ page_obj.number|add:"-1" }}</span>
 			</a>
 		</li>
 		{% endif %}
@@ -30,24 +30,24 @@
 		</li>
 	{% endif %}
 		<li class="page-item active">
-			<span class="page-link">{{ page.number }}</span>
+			<span class="page-link">{{ page_obj.number }}</span>
 		</li>
-	{% if page.has_next %}
-		{% if page.number < page.paginator.num_pages|add:"-1" %}
+	{% if page_obj.has_next %}
+		{% if page_obj.number < paginator.num_pages|add:"-1" %}
 		<li class="page-item">
 			<a class="page-link" href="{{ page_next }}" aria-label="Next">
-				<span>{{ page.number|add:"1" }}</span>
+				<span>{{ page_obj.number|add:"1" }}</span>
 			</a>
 		</li>
 		{% endif %}
-		{% if page.number < page.paginator.num_pages|add:"-2" %}
+		{% if page_obj.number < paginator.num_pages|add:"-2" %}
 		<li class="page-item disabled">
 			<span class="page-link">...</span>
 		</li>
 		{% endif %}
 		<li class="page-item">
 			<a class="page-link" href="{{ page_last }}" aria-label="Last">
-				<span>{{ page.paginator.num_pages }}</span>
+				<span>{{ page_obj.paginator.num_pages }}</span>
 			</a>
 		</li>
 		<li class="page-item">

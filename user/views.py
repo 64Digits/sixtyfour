@@ -1,28 +1,44 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.utils import timezone
-from django.core.paginator import Paginator
-from .models import Post, Comment
+from django.views.generic.list import ListView
+from django.shortcuts import get_object_or_404
 
+from .models import Post, Comment
 from django.contrib.auth import get_user_model
 
-def home_page(request, page=1):
-	post_set = Post.objects.filter(deleted=0).order_by('-created')
-	paginator = Paginator(post_set, 10)
-	posts = paginator.get_page(page)
-	return render(request, 'user/home.html', {'posts':posts})
+class ListContextView(ListView):
+	def add_context(self,context):
+		pass
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		self.add_context(context)
+		return context
 
-def post_listing(request, username, page=1):
-	user = get_user_model().objects.get(username=username)
-	post_set = Post.objects.filter(user__username=username, deleted=0).order_by('-created')
-	paginator = Paginator(post_set, 10)
-	posts = paginator.get_page(page)
-	return render(request, 'user/listing.html', {'op':user, 'posts':posts})
+class FrontListView(ListContextView):
+	paginate_by = 10
+	context_object_name = 'posts'
+	template_name = 'user/home.html'	
+	queryset = Post.posts_front.order_by('-created')
 
-def post_detail(request, username, entry, page=1):
-	user = get_user_model().objects.get(username=username)
-	post = Post.objects.get(user__username=username, id=entry)
-	comments_set = Comment.objects.filter(post=post, deleted=0).order_by('created')
-	paginator = Paginator(comments_set, 10)
-	comments = paginator.get_page(page)
-	return render(request, 'user/post.html', {'op':user, 'post':post, 'comments':comments})
+class UserPostListView(ListContextView):
+	paginate_by = 10
+	context_object_name = 'posts'
+	template_name = 'user/listing.html'
+	
+	def add_context(self,context):
+		context['op'] = get_object_or_404(get_user_model(),username=self.kwargs['username'])
+	
+	def get_queryset(self):
+		user = self.kwargs['username']
+		return Post.posts.filter(user__username=user).order_by('-created')
+
+class PostCommentListView(ListContextView):
+	paginate_by = 10
+	context_object_name = 'comments'
+	template_name = 'user/post.html'
+	
+	def add_context(self,context):
+		context['op'] = get_object_or_404(get_user_model(),username=self.kwargs['username'])
+		context['post'] = get_object_or_404(Post,id=self.kwargs['entry'])
+	
+	def get_queryset(self):
+		entry = self.kwargs['entry']
+		return Comment.objects.filter(post__id=entry).order_by('-created')

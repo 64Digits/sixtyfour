@@ -1,8 +1,4 @@
 {% url 'user:post' post.user post.id as post_url %}
-{% load sass_tags %}
-{% block styles %}
-	<link rel="stylesheet" type="text/css" href="{% sass_src 'css/post_card.scss' %}" />
-{% endblock %}
 <div class="row no-gutters border overflow-hidden flex-sm-row mb-5 shadow-sm h-md-250 position-relative">
 	<div class="col p-4 flex-grow-1 position-static">
 		<h3 class="mb-0"><a class="text-dark" href="{{ post_url }}">{{ post.title }}</a></h3>

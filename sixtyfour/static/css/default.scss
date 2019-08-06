@@ -1,18 +1,6 @@
-$enable_rounded: false;
-$primary: rgb(175, 31, 31);
-$light: #e9ecef;
-//$link_color: #007bff;
-//$link_color: #28a745;
-
+@import "sixtyfour/static/css/default_branding";
 @import "node_modules/bootstrap/scss/bootstrap";
-
-.nav-spacer {
-	height:8rem;
-}
-
-.nav-scroller {
-    position: relative;
-    z-index: 2;
-    height: 2.75rem;
-    overflow-y: hidden;
-}
+@import "sixtyfour/static/css/nav";
+@import "sixtyfour/static/css/bbcode";
+@import "sixtyfour/static/css/comment";
+@import "sixtyfour/static/css/post_card";

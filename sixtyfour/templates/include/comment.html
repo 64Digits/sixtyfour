@@ -1,8 +1,4 @@
 {% url 'user:post' post.user post.id as post_url %}
-{% load sass_tags %}
-{% block styles %}
-	<link rel="stylesheet" type="text/css" href="{% sass_src 'css/comment.scss' %}"/>
-{% endblock %}
 <div class="comment border mb-4">
 	<div class="row no-gutters overflow-hidden flex-md-row h-md-250 position-relative">
 		<div class="col-auto d-none d-sm-block">

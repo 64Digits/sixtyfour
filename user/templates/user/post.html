@@ -26,17 +26,6 @@
         <div class="post-content my-4">
             {{ post.formatted|safe }}
         </div>
-
-        <div class="post-comment-list">
-            {% for comment in comments %}
-                <div class="post-comment">
-                    <span class="post-comment-user">{{ comment.user }}</span>
-                    <span class="post-comment-content">
-                        {{ comment.entry }}
-                    </span>
-                </div>
-            {% endfor %}
-        </div>
     {% endif %}
 
 	<h3 class="mb-4">Comments</h3>

@@ -22,7 +22,7 @@ def post_listing(request, username, page=1):
 def post_detail(request, username, entry, page=1):
 	user = get_user_model().objects.get(username=username)
 	post = Post.objects.get(user__username=username, id=entry)
-	comments_set = Comment.objects.filter(post=post, deleted=0)
+	comments_set = Comment.objects.filter(post=post, deleted=0).order_by('created')
 	paginator = Paginator(comments_set, 10)
 	comments = paginator.get_page(page)
 	return render(request, 'user/post.html', {'op':user, 'post':post, 'comments':comments})

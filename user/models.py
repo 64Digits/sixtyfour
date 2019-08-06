@@ -22,6 +22,10 @@ class Profile(models.Model):
 	def __str__(self):
 		return 'Profile: %s' % (self.user.username)
 
+class PostManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False)
+
 class FrontPostManager(models.Manager):
 	def get_queryset(self):
 		return super().get_queryset().filter(deleted=False, pinned=False, show_recent=True)
@@ -29,6 +33,10 @@ class FrontPostManager(models.Manager):
 class NewsPostManager(models.Manager):
 	def get_queryset(self):
 		return super().get_queryset().filter(deleted=False, pinned=True, show_recent=True)
+
+class UserPostManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False)
 
 class Post(models.Model):
 	title = models.CharField(max_length=100)
@@ -43,13 +51,15 @@ class Post(models.Model):
 	deleted = models.BooleanField(default=False)
 
 	user = models.ForeignKey(
-		settings.AUTH_USER_MODEL,
+		get_user_model(),
 		on_delete=models.SET(get_sentinel_user)
 	)
 
-	posts = models.Manager()
+	objects = models.Manager()
+	posts = PostManager()
 	posts_front = FrontPostManager()
 	posts_news = NewsPostManager()
+	posts_user = UserPostManager()
 
 	@property
 	def formatted(self):
@@ -57,9 +67,17 @@ class Post(models.Model):
 
 	def __str__(self):
 		return '[%s] %s' % (self.user.username,self.title)
+	
+	@property
+	def comments_count(self):
+		return Comment.comments.filter(post=self).count()
 
 	class Meta:
 		ordering = ['-created']
+
+class CommentManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False)
 
 class Comment(models.Model):
 	entry = models.TextField()
@@ -71,9 +89,12 @@ class Comment(models.Model):
 	
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	user = models.ForeignKey(
-		settings.AUTH_USER_MODEL,
+		get_user_model(),
 		on_delete=models.SET(get_sentinel_user)
 	)
+
+	objects = models.Manager()
+	comments = CommentManager()
 
 	@property
 	def formatted(self):

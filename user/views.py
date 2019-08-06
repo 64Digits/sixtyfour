@@ -12,11 +12,22 @@ class WithContext():
 		context.update(self.with_context(context))
 		return context
 
-class FrontListView(ListView):
+class StaticContext():
+	def get_context_data(self, **kwargs):
+		context = super().get_context_data(**kwargs)
+		context.update(self.context)
+		return context
+
+class FrontListView(StaticContext,ListView):
 	template_name = 'user/home.html'	
 	context_object_name = 'posts'
 	paginate_by = 10
 	queryset = Post.posts_front.all()
+	context = {'heading':'Recent Posts'}
+
+class NewsListView(FrontListView):
+	queryset = Post.posts_news.all()
+	context = {'heading':'Recent News'}
 
 class UserPostListView(WithContext,ListView):
 	template_name = 'user/listing.html'

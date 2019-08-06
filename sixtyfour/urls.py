@@ -18,11 +18,13 @@ from django.urls import include, path
 from django.conf.urls.static import static
 from django.conf import settings
 
-from user.views import FrontListView
+from user.views import FrontListView, NewsListView
 
 sixtyfour = ([
 	path('', FrontListView.as_view(), name='front'),
 	path('page/<int:page>', FrontListView.as_view(), name='front'),
+	path('news', NewsListView.as_view(), name='news'),
+	path('news/page/<int:page>', NewsListView.as_view(), name='news'),
 ], 'sixtyfour')
 
 urlpatterns = [

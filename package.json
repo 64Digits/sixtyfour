@@ -4,6 +4,7 @@
   "version": "1.0.0",
   "dependencies": {},
   "devDependencies": {
+    "@fancyapps/fancybox": "^3.5.7",
     "autoprefixer": "^9.6.1",
     "bootstrap": "^4.3.1",
     "jquery": "^3.4.1",

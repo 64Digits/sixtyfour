@@ -8,7 +8,7 @@
         <div>
             This post was deleted.
         </div>
-    {% else %}
+	{% else %}
 		<h3 class="mb-0"><a class="text-dark" href="{{ post_url }}">{{ post.title }}</a></h3>
 		<div class="mb-1">
 			<span class="text-muted">
@@ -24,7 +24,7 @@
 			{% endif %}
 		</div>
         <div class="post-content my-4">
-            {{ post.formatted|safe }}
+			{% format_post post request.user %}
         </div>
     {% endif %}
 

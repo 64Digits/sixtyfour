@@ -1,3 +1,4 @@
 libsass
 django-sass-processor
 bbcode
+markdown

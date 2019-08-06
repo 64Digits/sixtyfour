@@ -1,4 +1,8 @@
 {% url 'user:post' post.user post.id as post_url %}
+{% load sass_tags %}
+{% block styles %}
+	<link rel="stylesheet" type="text/css" href="{% sass_src 'css/post_card.scss' %}" />
+{% endblock %}
 <div class="row no-gutters border overflow-hidden flex-sm-row mb-5 shadow-sm h-md-250 position-relative">
 	<div class="col p-4 flex-grow-1 position-static">
 		<h3 class="mb-0"><a class="text-dark" href="{{ post_url }}">{{ post.title }}</a></h3>
@@ -26,7 +30,9 @@
 	</div>
 	{% if front %}
 	<div class="col-auto d-none d-lg-block bg-light">
-		<div class="card-avatar bg-secondary" style="width:10em;height:10em;"></div>
+		<div class="card-avatar bg-secondary" style="width:10em;height:10em;">
+			{% user_avatar post.user %}
+		</div>
 		<div class="card-profile text-center my-2">
 			<strong class="d-inline-block text-primary">{% user post.user %}</strong>
 		</div>

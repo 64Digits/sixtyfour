@@ -9,7 +9,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>{{ site_name }}</title>
 		<link rel="stylesheet" type="text/css" href="{% sass_src 'css/default.scss' %}"/>
-
+		<link rel="stylesheet" type="text/css" href="{% sass_src 'css/bbcode.scss' %}"/>
+		<link rel="stylesheet" type="text/css" href="{% static 'jquery.fancybox.min.css' %}" />
 		{% block styles %}
 			{# area for other views to add styles #}
 		{% endblock %}
@@ -30,6 +31,7 @@
 </main>
 		{# include common scripts here, outside scripts block #}
 		<script src="{% static "jquery.min.js" %}"></script>
+		<script src="{% static "jquery.fancybox.min.js" %}"></script>
 		<script src="{% static "bootstrap.bundle.min.js" %}"></script>
 		{% block scripts %}
 			{# area for other views to add scripts #}

@@ -4,34 +4,32 @@ from django.shortcuts import get_object_or_404
 from .models import Post, Comment
 from django.contrib.auth import get_user_model
 
-class WithContext():
-	def with_context(self,context):
-		return {}
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context.update(self.with_context(context))
-		return context
+from sixtyfour.sidebar import Sidebar,WithSidebar
 
-class StaticContext():
-	def get_context_data(self, **kwargs):
-		context = super().get_context_data(**kwargs)
-		context.update(self.context)
-		return context
+class WelcomeBar(Sidebar):
+	name = "welcome"
+	title = "Welcome"
 
-class FrontListView(StaticContext,ListView):
+class ProfileBar(Sidebar):
+	name = "profile"
+	title = "Profile"
+
+class FrontListView(WithSidebar,ListView):
 	template_name = 'user/home.html'	
 	context_object_name = 'posts'
 	paginate_by = 10
 	queryset = Post.posts_front.all()
 	context = {'heading':'Recent Posts'}
+	sidebars = [WelcomeBar()]
 
 class NewsListView(FrontListView):
 	queryset = Post.posts_news.all()
 	context = {'heading':'Recent News'}
 
-class UserPostListView(WithContext,ListView):
+class UserPostListView(WithSidebar,ListView):
 	template_name = 'user/listing.html'
 	context_object_name = 'posts'
+	sidebars = [ProfileBar()]
 	paginate_by = 10
 
 	def with_context(self,context):
@@ -43,9 +41,10 @@ class UserPostListView(WithContext,ListView):
 		user = self.kwargs['username']
 		return Post.posts_user.filter(user__username=user)
 
-class PostCommentListView(WithContext,ListView):
+class PostCommentListView(WithSidebar,ListView):
 	template_name = 'user/post.html'
 	context_object_name = 'comments'
+	sidebars = [ProfileBar()]
 	paginate_by = 10
 
 	def with_context(self,context):

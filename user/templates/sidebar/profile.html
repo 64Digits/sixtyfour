@@ -1,7 +1,11 @@
 {% load humanize %}
 {% if op %}
 <div class="">
-	<div class="d-flex justify-content-center"><div class="sidebar-avatar bg-secondary" style="width:10em;height:10em;"></div></div>
+	<div class="d-flex justify-content-center">
+		<div class="sidebar-avatar">
+			{% user_avatar op %}
+		</div>
+	</div>
 	<div class="sidebar-profile text-center my-2">
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item"><strong class="d-inline-block text-primary">{% user op %}</strong></li>

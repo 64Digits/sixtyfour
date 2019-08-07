@@ -1,5 +1,15 @@
+.bbcode-img {
+	max-width:100%;
+	height:auto;
+}
 .bbcode-right {
     display: flex;
     flex-direction: column;
     place-items: flex-end;
+}
+.preview {
+	img {
+		max-width:10em;
+		max-height:10em;
+	}
 }

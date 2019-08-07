@@ -15,9 +15,9 @@
 				<span class="placeholder-icon-pinned">📌</span>
 			{% endif %}
 		</div>
-		<p class="card-text my-4">
+		<div class="preview overflow-hidden my-4">
 			{% formatted post truncate=50 %}
-		</p>
+		</div>
 		<div class="mt-4">
 			<a href="{{ post_url }}">Read Post
 				<span class="text-muted">({{ post.comments_count }} Comments)</span>
@@ -26,7 +26,7 @@
 	</div>
 	{% if front %}
 	<div class="col-auto d-none d-lg-block bg-light">
-		<div class="card-avatar bg-secondary" style="width:10em;height:10em;">
+		<div class="card-avatar">
 			{% user_avatar post.user %}
 		</div>
 		<div class="card-profile text-center my-2">

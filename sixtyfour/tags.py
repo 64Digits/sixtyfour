@@ -36,10 +36,14 @@ def user(user):
 
 @register.simple_tag
 def user_avatar(user):
+	tpl='<img title="{}" class="avatar" src="{}"/>'
+
 	if hasattr(user, 'profile'):
-		return format_html('<img title="{}" src="{}">', user.username + "'s avatar", user.profile.avatar)
+		args=[user.username + "'s avatar", user.profile.avatar]
 	else:
-		return format_html('<img title="Default avatar" src="/static/images/default_avatar.png">')
+		args=['Default avatar', '/static/images/default_avatar.png']
+
+	return format_html(tpl, *args)
 
 @register.simple_tag(takes_context=True)
 def formatted(context, post=None, truncate=None):

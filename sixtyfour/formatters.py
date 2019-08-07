@@ -30,7 +30,7 @@ def bb64_font(tag_name, value, options, parent, context):
 	font = 'sans serif'
 	if 'font' in options:
 		font = options['font']
-	return format_html('<span style="font-family: {font};">{value}</span>', value=mark_safe(value))
+	return format_html('<span style="font-family: {font};">{value}</span>', font=font, value=mark_safe(value))
 
 def bb64_size(tag_name, value, options, parent, context):
 	size = ''
@@ -189,6 +189,12 @@ def bb64_theusertag(tag_name, value, options, parent, context):
 	else:
 		return 'guest'
 
+def bb64_embed_responsive(fn):
+	def wrapper_fn(tag_name, value, options, parent, context):
+		inner=fn(tag_name, value, options, parent, context)
+		return format_html('<div class="embed-responsive embed-responsive-16by9">{}</div>',inner)
+	return wrapper_fn
+
 def bb64_h5audio(tag_name, value, options, parent, context):
 	return format_html('<audio src={value} controls preload="none">Audio not supported</audio>', value=value)
 
@@ -211,6 +217,7 @@ def get_yt_video_id(url):
 	else:
 		return ValueError
 
+@bb64_embed_responsive
 def bb64_youtube(tag_name, value, options, parent, context):
 	video_id = get_yt_video_id(value)
 
@@ -222,6 +229,7 @@ def bb64_youtube(tag_name, value, options, parent, context):
 				allow="encrypted-media;picture-in-picture" allowfullscreen></iframe>
 	""", video_id=video_id)
 
+@bb64_embed_responsive
 def bb64_vimeo(tag_name, value, options, parent, context):
 	video_id = value.split("/")[-1]
 

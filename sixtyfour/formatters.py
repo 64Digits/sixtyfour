@@ -30,13 +30,13 @@ def bb64_font(tag_name, value, options, parent, context):
 	font = 'sans serif'
 	if 'font' in options:
 		font = options['font']
-	return format_html('<span style="font-family: {font};">{value}</span>', value=value)
+	return format_html('<span style="font-family: {font};">{value}</span>', value=mark_safe(value))
 
 def bb64_size(tag_name, value, options, parent, context):
 	size = ''
 	if 'size' in options:
 		size = re.sub(r"\D", "", options['size'])
-	return format_html('<span style="font-size: {size}pt;">{value}</span>', size=size, value=value)
+	return format_html('<span style="font-size: {size}pt;">{value}</span>', size=size, value=mark_safe(value))
 
 def bb64_tnail(tag_name, value, options, parent, context):
 	width = '204'
@@ -82,7 +82,7 @@ def bb64_shh(tag_name, value, options, parent, context):
 				{value}
 			</div>
 		</div>
-		""", target_user=target_user, value=value)
+		""", target_user=target_user, value=mark_safe(value))
 	elif not current_user.is_authenticated and target_user == 'guest':
 		return format_html("""
 			<div class="card">
@@ -96,7 +96,7 @@ def bb64_shh(tag_name, value, options, parent, context):
 				{value}
 			</div>
 		</div>
-		""", value=value)
+		""", value=mark_safe(value))
 	else:
 		return ""
 
@@ -122,7 +122,7 @@ def bb64_blind(tag_name, value, options, parent, context):
 				{value}
 			</div>
 		</div>
-		""", target_user=target_user, value=value)
+		""", target_user=target_user, value=mark_safe(value))
 	else:
 		return ""
 
@@ -142,7 +142,7 @@ def bb64_hide(primary_reason, show=False, is_nsfw=False):
 			'show_class':'show' if show else '',
 			'reason':reason,
 			'hide_id':"bbcode-hide-%d" % (bb64_hide.hide_index),
-			'value':value
+			'value':mark_safe(value)
 		}
 
 		return format_html("""
@@ -163,6 +163,10 @@ def bb64_hide(primary_reason, show=False, is_nsfw=False):
 			</div>
 		""", **params )
 	return bb64_hide_internal
+
+def bb64_user(tag_name, value, options, parent, context):
+	user = value if value else ''
+	return format_html('<a href="/user/{user}">{user}</a>', user=user)
 
 def bb64_profile(tag_name, value, options, parent, context):
 	user = ''
@@ -293,6 +297,7 @@ def ExtendedParser():
 	parser.add_formatter('nsfw', bb64_hide("NSFW: ", is_nsfw=True))
 	parser.add_formatter('shh', bb64_shh)
 	parser.add_formatter('blind', bb64_blind)
+	parser.add_formatter('user', bb64_user)
 	parser.add_formatter('profile', bb64_profile, standalone=True)
 	parser.add_formatter('h5audio', bb64_h5audio, replace_links=False)
 	parser.add_formatter('h5video', bb64_h5video, replace_links=False)

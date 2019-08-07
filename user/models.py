@@ -28,7 +28,7 @@ class PostManager(models.Manager):
 
 class FrontPostManager(models.Manager):
 	def get_queryset(self):
-		return super().get_queryset().filter(deleted=False, pinned=False, show_recent=True)
+		return super().get_queryset().filter(deleted=False, show_recent=True)
 
 class NewsPostManager(models.Manager):
 	def get_queryset(self):

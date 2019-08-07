@@ -7,6 +7,25 @@ import re
 from markdown import markdown
 from .utils import static_var
 
+# BB64 Meta (Decorators)
+
+def bb64_embed_responsive(fn):
+	def wrapper_fn(tag_name, value, options, parent, context):
+		inner=fn(tag_name, value, options, parent, context)
+		return format_html('<div class="embed-responsive embed-responsive-16by9">{}</div>',inner)
+	return wrapper_fn
+
+def bb64_exempt_preview(placeholder=None):
+	def decorator(fn):
+		def wrapper_fn(tag_name, value, options, parent, context):
+			if context and 'preview' in context and context['preview']:
+				return placeholder if placeholder is not None else '[%s]'%tag_name
+			return fn(tag_name, value, options, parent, context)
+		return wrapper_fn
+	return decorator
+
+# BB64 Tags
+
 def bb64_img(tag_name, value, options, parent, context):
 	title = 'Image'
 	width = ''
@@ -37,6 +56,17 @@ def bb64_size(tag_name, value, options, parent, context):
 	if 'size' in options:
 		size = re.sub(r"\D", "", options['size'])
 	return format_html('<span style="font-size: {size}pt;">{value}</span>', size=size, value=mark_safe(value))
+
+def bb64_color(tag_name, value, options, parent, context):
+	if tag_name in options:
+		color = options[tag_name].strip()
+	elif options:
+		color = list(options.keys())[0].strip()
+	else:
+		return value
+	match = re.match(r'^([a-z]+)|^(#[a-f0-9]{3,6})', color, re.I)
+	color = match.group() if match else 'inherit'
+	return format_html('<span style="color:{color};">{value}</span>', color=color, value=mark_safe(value))
 
 def bb64_tnail(tag_name, value, options, parent, context):
 	width = '204'
@@ -71,11 +101,9 @@ def bb64_shh(tag_name, value, options, parent, context):
 
 	if current_user.is_authenticated and current_user.username == target_user:
 		return format_html("""
-			<div class="card">
+		<div class="card">
 			<div class="card-header">
-				<h5 class="mb-0">
-					Whispering to {target_user}
-				</h5>
+				Whispering to {target_user}
 			</div>
 
 			<div class="card-body">
@@ -85,11 +113,9 @@ def bb64_shh(tag_name, value, options, parent, context):
 		""", target_user=target_user, value=mark_safe(value))
 	elif not current_user.is_authenticated and target_user == 'guest':
 		return format_html("""
-			<div class="card">
+		<div class="card">
 			<div class="card-header">
-				<h5 class="mb-0">
-					Whispering to guest
-				</h5>
+				Whispering to guest
 			</div>
 
 			<div class="card-body">
@@ -111,11 +137,9 @@ def bb64_blind(tag_name, value, options, parent, context):
 
 	if current_user.is_authenticated and current_user.username != target_user:
 		return format_html("""
-			<div class="card">
+		<div class="card">
 			<div class="card-header">
-				<h5 class="mb-0">
-					Hiding from {target_user}
-				</h5>
+				Hiding from {target_user}
 			</div>
 
 			<div class="card-body">
@@ -126,9 +150,24 @@ def bb64_blind(tag_name, value, options, parent, context):
 	else:
 		return ""
 
+def bb64_quote(tag_name, value, options, parent, context):
+	target_user = options['quote'] if (options and 'quote' in options) else ''
+
+	return format_html("""
+	<div class="card">
+		<div class="card-header">
+			Quote: {target_user}
+		</div>
+
+		<div class="card-body">
+			{value}
+		</div>
+	</div>
+	""", target_user=target_user, value=mark_safe(value))
 
 @static_var(hide_index = 0)
 def bb64_hide(primary_reason, show=False, is_nsfw=False):
+	@bb64_exempt_preview("")
 	def bb64_hide_internal(tag_name, value, options, parent, context):
 		reason = primary_reason
 		if tag_name in options:
@@ -137,8 +176,8 @@ def bb64_hide(primary_reason, show=False, is_nsfw=False):
 		bb64_hide.hide_index += 1
 
 		params = {
-			'header_class':'bg-danger' if is_nsfw else 'text-primary',
-			'button_class':'text-white' if is_nsfw else 'text-info',
+			'header_class':'bg-danger' if is_nsfw else '',
+			'button_class':'text-white' if is_nsfw else 'text-primary',
 			'show_class':'show' if show else '',
 			'reason':reason,
 			'hide_id':"bbcode-hide-%d" % (bb64_hide.hide_index),
@@ -148,11 +187,9 @@ def bb64_hide(primary_reason, show=False, is_nsfw=False):
 		return format_html("""
 			<div class="card">
 				<div class="card-header {header_class}">
-					<h5 class="mb-0">
-						<button class="btn btn-link {button_class}" data-toggle="collapse" data-target="#{hide_id}">
-							{reason}
-						</button>
-					</h5>
+					<button class="btn btn-link {button_class}" data-toggle="collapse" data-target="#{hide_id}">
+						{reason}
+					</button>
 				</div>
 				
 				<div id="{hide_id}" class="collapse {show_class}">
@@ -189,15 +226,11 @@ def bb64_theusertag(tag_name, value, options, parent, context):
 	else:
 		return 'guest'
 
-def bb64_embed_responsive(fn):
-	def wrapper_fn(tag_name, value, options, parent, context):
-		inner=fn(tag_name, value, options, parent, context)
-		return format_html('<div class="embed-responsive embed-responsive-16by9">{}</div>',inner)
-	return wrapper_fn
-
+@bb64_exempt_preview("(Embedded Audio)")
 def bb64_h5audio(tag_name, value, options, parent, context):
 	return format_html('<audio src={value} controls preload="none">Audio not supported</audio>', value=value)
 
+@bb64_exempt_preview("(Embedded Video)")
 def bb64_h5video(tag_name, value, options, parent, context):
 	return format_html('<video src={value} controls>Video not supported</video>', value=value)
 
@@ -217,6 +250,7 @@ def get_yt_video_id(url):
 	else:
 		return ValueError
 
+@bb64_exempt_preview("(Embedded Video)")
 @bb64_embed_responsive
 def bb64_youtube(tag_name, value, options, parent, context):
 	video_id = get_yt_video_id(value)
@@ -229,6 +263,7 @@ def bb64_youtube(tag_name, value, options, parent, context):
 				allow="encrypted-media;picture-in-picture" allowfullscreen></iframe>
 	""", video_id=video_id)
 
+@bb64_exempt_preview("(Embedded Video)")
 @bb64_embed_responsive
 def bb64_vimeo(tag_name, value, options, parent, context):
 	video_id = value.split("/")[-1]
@@ -241,6 +276,7 @@ def bb64_vimeo(tag_name, value, options, parent, context):
 			allow="fullscreen" allowfullscreen></iframe>
 	""", video_id=video_id)
 
+@bb64_exempt_preview("(Embedded Audio)")
 def bb64_soundcloud(tag_name, value, options, parent, context):
 	return format_html("""
 		<iframe 
@@ -250,6 +286,8 @@ def bb64_soundcloud(tag_name, value, options, parent, context):
 			src="https://w.soundcloud.com/player/?url={value}"></iframe>
 	""", value=value)
 
+@bb64_exempt_preview("(Embedded Security Risk)")
+@bb64_exempt_preview
 def bb64_flash(tag_name, value, options, parent, context):
 	width = '640'
 	height = '360'
@@ -266,6 +304,7 @@ def bb64_flash(tag_name, value, options, parent, context):
 		</object>
 	""", width=width, height=height, value=value)
 
+@bb64_exempt_preview()
 def bb64_paypal(tag_name, value, options, parent, context):
 	paypal_button_id = value.split("/")[-1]
 	return format_html("""
@@ -276,50 +315,59 @@ def bb64_paypal(tag_name, value, options, parent, context):
 		</form>""", paypal_button_id=paypal_button_id)
 
 def ExtendedParser():
-	parser = Parser(newline='</p><p>')
+	parser = Parser()#newline='</p><p>')
 
-	parser.add_simple_formatter('ul', '<ul>%(value)s</ul>')
-	parser.add_simple_formatter('ol', '<ol>%(value)s</ol>')
-	parser.add_simple_formatter('li', '<li>%(value)s</li>')
-	parser.add_simple_formatter('h1', '<h1>%(value)s</h1>')
-	parser.add_simple_formatter('h2', '<h2>%(value)s</h2>')
-	parser.add_simple_formatter('h3', '<h3>%(value)s</h3>')
-	parser.add_simple_formatter('h4', '<h4>%(value)s</h4>')
-	parser.add_simple_formatter('h5', '<h5>%(value)s</h5>')
-	parser.add_simple_formatter('h6', '<h6>%(value)s</h6>')
-	parser.add_simple_formatter('tt', '<pre>%(value)s</pre>')
-	parser.add_simple_formatter('br', '<br />', standalone=True)
-	parser.add_simple_formatter('o', '<span style="text-decoration: overline;">%(value)s</span>')
-	parser.add_simple_formatter('u2', '<span style="border-bottom: 1px dotted;">%(value)s</span>')
-	parser.add_simple_formatter('em', '<span style="color:#FFF; background-color: #CC0000;">%(value)s</span>')
-	parser.add_simple_formatter('ln', '<hr />', standalone=True)
+	simple=[
+		'b','i','u','em', 'tt',
+		'sub', 'sup', 'ul','ol','li',
+		'h1','h2','h3','h4','h5','h6'
+	]
+	for t in simple:
+		parser.add_simple_formatter(t, '<'+t+'>%(value)s</'+t+'>')
 
-	parser.add_formatter('img', bb64_img, replace_links=False)
 	parser.add_simple_formatter('right', '<span class="bbcode-right">%(value)s</span>', transform_newlines=False)
-	parser.add_formatter('rev', bb64_rev)
-	parser.add_formatter('font', bb64_font)
-	parser.add_formatter('size', bb64_size)
-	parser.add_formatter('tnail', bb64_tnail, replace_links=False)
-	parser.add_formatter('hide', bb64_hide("Hide: "))
-	parser.add_formatter('show', bb64_hide("Hide: ", show=True))
-	parser.add_formatter('nsfw', bb64_hide("NSFW: ", is_nsfw=True))
-	parser.add_formatter('shh', bb64_shh)
-	parser.add_formatter('blind', bb64_blind)
-	parser.add_formatter('user', bb64_user)
-	parser.add_formatter('profile', bb64_profile, standalone=True)
-	parser.add_formatter('h5audio', bb64_h5audio, replace_links=False)
-	parser.add_formatter('h5video', bb64_h5video, replace_links=False)
-	parser.add_formatter('audio', bb64_h5audio, replace_links=False)
-	parser.add_formatter('youtube', bb64_youtube, replace_links=False)
-	parser.add_formatter('youtubehd', bb64_youtube, replace_links=False)
-	parser.add_formatter('youtubeaudio', bb64_youtube, replace_links=False)
-	parser.add_formatter('vimeo', bb64_vimeo, replace_links=False)
-	parser.add_formatter('soundcloud', bb64_soundcloud, replace_links=False)
-	parser.add_formatter('flash', bb64_flash, replace_links=False)
-	parser.add_formatter('paypal', bb64_paypal, replace_links=False)
-	parser.add_formatter('theusertag', bb64_theusertag, standalone=True)
-	parser.add_formatter('rand', bb64_rand)
-	parser.add_formatter('markdown', bb64_markdown)
+
+	def bind(*args,**kwargs):
+		parser.add_formatter(*args, **kwargs)
+
+	bind('img', bb64_img, replace_links=False)
+	bind('quote', bb64_quote, swallow_trailing_newline=True)
+	bind('rev', bb64_rev)
+	bind('font', bb64_font)
+	bind('size', bb64_size)
+	bind('color', bb64_color)
+	bind('tnail', bb64_tnail, replace_links=False)
+	bind('hide', bb64_hide("Hide: "), swallow_trailing_newline=True)
+	bind('show', bb64_hide("Hide: ", show=True), swallow_trailing_newline=True)
+	bind('nsfw', bb64_hide("NSFW: ", is_nsfw=True), swallow_trailing_newline=True)
+	bind('shh', bb64_shh, swallow_trailing_newline=True)
+	bind('blind', bb64_blind, swallow_trailing_newline=True)
+	bind('user', bb64_user)
+	bind('profile', bb64_profile, standalone=True)
+	bind('h5audio', bb64_h5audio, replace_links=False)
+	bind('h5video', bb64_h5video, replace_links=False)
+	bind('audio', bb64_h5audio, replace_links=False)
+	bind('youtube', bb64_youtube, replace_links=False)
+	bind('youtubehd', bb64_youtube, replace_links=False)
+	bind('youtubeaudio', bb64_youtube, replace_links=False)
+	bind('vimeo', bb64_vimeo, replace_links=False)
+	bind('soundcloud', bb64_soundcloud, replace_links=False)
+	#bind('flash', bb64_flash, replace_links=False) # Too risky
+	bind('paypal', bb64_paypal, replace_links=False)
+	bind('theusertag', bb64_theusertag, standalone=True)
+	bind('rand', bb64_rand)
+	bind('markdown', bb64_markdown, render_embedded=False)
+
+	aliases = {
+		'ln': 'hr',
+		'col': 'color',
+		'colour': 'color',
+		'md': 'markdown',
+		'choice': 'rand',
+	}
+
+	for k,v in aliases.items():
+		parser.recognized_tags[k] = parser.recognized_tags[v]
 
 	return parser
 
@@ -327,5 +375,5 @@ main_parser = ExtendedParser()
 def bbcode64(entry, context=None):
 	context['parser_obj'] = entry
 	processed = main_parser.format(entry.entry.strip(), **context)
-	return format_html('<p>{}</p>',mark_safe(processed))
+	return format_html('<div class="bbcode"><p>{}</p></div>',mark_safe(processed))
 

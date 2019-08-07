@@ -1,3 +1,15 @@
+.bbcode {
+	.card-header {
+		padding:0.375rem 0.75rem;
+
+		button {
+			padding:0rem;
+			text-align:left;
+			width:100%;
+		}
+	}
+}
+
 .bbcode-img {
 	max-width:100%;
 	height:auto;

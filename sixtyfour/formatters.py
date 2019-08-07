@@ -6,6 +6,10 @@ import random
 import re
 from markdown import markdown
 from .utils import static_var
+from pygments.formatters import HtmlFormatter;
+from pygments.lexers import get_lexer_by_name, guess_lexer;
+from pygments import highlight;
+from pygments.util import ClassNotFound
 
 # BB64 Meta (Decorators)
 
@@ -314,8 +318,27 @@ def bb64_paypal(tag_name, value, options, parent, context):
 			<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
 		</form>""", paypal_button_id=paypal_button_id)
 
+def bb64_code(tag_name, value, options, parent, context):
+	lang = 'text'
+
+	if tag_name in options:
+		lang = options[tag_name]
+
+	lexer = None
+	try:
+		lexer = get_lexer_by_name(lang)
+	except ClassNotFound:
+		try:
+			lexer = guess_lexer(value)
+		except ClassNotFound:
+			lexer = get_lexer_by_name('text')
+			
+	formatter = HtmlFormatter(linenos=False)
+	result = highlight(value, lexer, formatter)
+	return format_html("""<div class="bbcode-code">{result}</div>""", result=mark_safe(mark_safe(result)))
+
 def ExtendedParser():
-	parser = Parser()#newline='</p><p>')
+	parser = Parser()
 
 	simple=[
 		'b','i','u','em', 'tt',
@@ -326,12 +349,14 @@ def ExtendedParser():
 		parser.add_simple_formatter(t, '<'+t+'>%(value)s</'+t+'>')
 
 	parser.add_simple_formatter('right', '<span class="bbcode-right">%(value)s</span>', transform_newlines=False)
-
+	parser.add_simple_formatter('flex', '<div class="bbcode-flex">%(value)s</div>')
+  
 	def bind(*args,**kwargs):
 		parser.add_formatter(*args, **kwargs)
 
 	bind('img', bb64_img, replace_links=False)
 	bind('quote', bb64_quote, swallow_trailing_newline=True)
+	bind('code', bb64_code, render_embedded escape_html=False)
 	bind('rev', bb64_rev)
 	bind('font', bb64_font)
 	bind('size', bb64_size)

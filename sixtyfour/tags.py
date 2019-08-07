@@ -1,6 +1,8 @@
 from django.urls import reverse
 from django.utils.safestring import mark_safe
 from django.utils.html import format_html
+from django.template.defaultfilters import truncatewords_html
+
 from sixtyfour.formatters import bbcode64
 
 from django import template
@@ -39,6 +41,14 @@ def user_avatar(user):
 	else:
 		return format_html('<img title="Default avatar" src="/static/images/default_avatar.png">')
 
-@register.simple_tag
-def format_post(post, request):
-	return bbcode64(post, request)
+@register.simple_tag(takes_context=True)
+def formatted(context, post=None, truncate=None):
+	if not post:
+		post = context['post']
+	ctx = {}
+	[ctx.update(c) for c in context.dicts]
+	res = bbcode64(post, ctx)
+	if truncate:
+		return truncatewords_html(res, truncate)
+	else:
+		return res

@@ -16,7 +16,7 @@
 			{% endif %}
 		</div>
 		<p class="card-text my-4">
-			{{ post.formatted|truncatewords_html:50 }}
+			{% formatted post truncate=50 %}
 		</p>
 		<div class="mt-4">
 			<a href="{{ post_url }}">Read Post

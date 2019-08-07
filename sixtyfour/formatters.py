@@ -6,6 +6,10 @@ import random
 import re
 from markdown import markdown
 from .utils import static_var
+from pygments.formatters import HtmlFormatter;
+from pygments.lexers import get_lexer_by_name, guess_lexer;
+from pygments import highlight;
+from pygments.util import ClassNotFound
 
 def bb64_img(tag_name, value, options, parent, context):
 	title = 'Image'
@@ -275,6 +279,25 @@ def bb64_paypal(tag_name, value, options, parent, context):
 			<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
 		</form>""", paypal_button_id=paypal_button_id)
 
+def bb64_code(tag_name, value, options, parent, context):
+	lang = 'text'
+
+	if tag_name in options:
+		lang = options[tag_name]
+
+	lexer = None
+	try:
+		lexer = get_lexer_by_name(lang)
+	except ClassNotFound:
+		try:
+			lexer = guess_lexer(value)
+		except ClassNotFound:
+			lexer = get_lexer_by_name('text')
+			
+	formatter = HtmlFormatter(linenos=False)
+	result = highlight(value, lexer, formatter)
+	return mark_safe(f"""<div class="bbcode-code">{result}</div>""")
+
 def ExtendedParser():
 	parser = Parser(newline='</p><p>')
 
@@ -321,6 +344,8 @@ def ExtendedParser():
 	parser.add_formatter('theusertag', bb64_theusertag, standalone=True)
 	parser.add_formatter('rand', bb64_rand)
 	parser.add_formatter('markdown', bb64_markdown)
+
+	parser.add_formatter('code', bb64_code, escape_html=False)
 
 	return parser
 

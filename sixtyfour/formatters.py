@@ -356,7 +356,7 @@ def ExtendedParser():
 
 	bind('img', bb64_img, replace_links=False)
 	bind('quote', bb64_quote, swallow_trailing_newline=True)
-	bind('code', bb64_code, render_embedded escape_html=False)
+	bind('code', bb64_code, render_embedded=False, escape_html=False)
 	bind('rev', bb64_rev)
 	bind('font', bb64_font)
 	bind('size', bb64_size)

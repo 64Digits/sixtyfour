@@ -296,7 +296,7 @@ def bb64_code(tag_name, value, options, parent, context):
 			
 	formatter = HtmlFormatter(linenos=False)
 	result = highlight(value, lexer, formatter)
-	return mark_safe(f"""<div class="bbcode-code">{result}</div>""")
+	return format_html("""<div class="bbcode-code">{result}</div>""", result=mark_safe(mark_safe(result)))
 
 def ExtendedParser():
 	parser = Parser(newline='</p><p>')

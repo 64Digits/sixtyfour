@@ -1,6 +1,12 @@
-{% for sidebar_module in sidebar %}
-<div class="border mb-3 shadow-sm">
-	<div class="bg-primary px-3 py-2"><span class="lead text-white">{{ sidebar_module.title }}</span></div>
-	<div class="px-3 py-3">{% include sidebar_module.template %}</div>
+<div class="sidebar-module">
+	<button class="sidebar-title btn btn-link lead"
+		type="button" data-toggle="collapse" 
+		data-target="#sb_{{ sidebar_module.name }}"
+		aria-controls="sb_{{ sidebar_module.name }}"
+		aria-expanded="true">
+	  {{ sidebar_module.title }}
+	</button>
+	<div class="sidebar-content p-3 collapse show" id="sb_{{ sidebar_module.name }}">
+		{% include sidebar_module.template %}
+	</div>
 </div>
-{% endfor %}

@@ -16,18 +16,22 @@
 	</head>
 	<body class="bg-white">
 		{% include 'include/nav.html' %}
-<main role="main" class="container">
-		<div class="row">
-		<div class="col-md-8">
-		{% block content %}
-			<p>Nothing to see here.</p>
-		{% endblock %}
-		</div>
-		<div class="col-md-4">
-		{% include 'include/sidebar.html' %}
-		</div>
-		</div>
-</main>
+		<main role="main" class="container">
+			<div class="row">
+				<div class="col-md-8">
+					{% block content %}
+					<p>Nothing to see here.</p>
+					{% endblock %}
+				</div>
+				<div class="col-md-4 p-0">
+					<div class="sidebar">
+					{% for sidebar_module in sidebar %}
+						{% include 'include/sidebar.html' %}
+					{% endfor %}
+					</div>
+				</div>
+			</div>
+		</main>
 		{# include common scripts here, outside scripts block #}
 		<script src="{% static "jquery.min.js" %}"></script>
 		<script src="{% static "jquery.fancybox.min.js" %}"></script>

@@ -1,0 +1,35 @@
+.sidebar {
+	margin:0rem 1rem;
+	//background-color:#e9ecef;
+	
+	.sidebar-module {
+		//border: 1px solid rgba(0,0,0,0.35);
+		//border-radius: 0.2rem;
+	}
+
+	.sidebar-title {
+		font-size:1.25rem;
+		font-weight:300;
+		text-align:left;
+		padding:0.25rem 0.75rem;
+		display:block;
+		width:100%;
+		background-color:$primary;
+		box-shadow: 0rem -0.3rem 0.1rem -0.3rem rgba(0,0,0,0.25) inset,	0rem 0.3rem 0.1rem -0.3rem rgba(255,255,255,0.25) inset;
+		border:0px solid transparent;
+		
+		&, &:hover, &:active,
+		&:link, &:visited, &:focus {
+			color:#fff;
+			text-decoration:none;
+		}
+
+		&.collapsed {
+			background-color:grayscale($primary);
+		}
+	}
+
+	.sidebar-content {
+		box-shadow: 0rem 0.3rem 0.1rem -0.3rem rgba(0,0,0,0.25) inset;
+	}
+}

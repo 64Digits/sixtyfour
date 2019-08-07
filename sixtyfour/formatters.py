@@ -295,7 +295,7 @@ def ExtendedParser():
 	parser.add_formatter('blind', bb64_blind)
 	parser.add_formatter('profile', bb64_profile, standalone=True)
 	parser.add_formatter('h5audio', bb64_h5audio, replace_links=False)
-	parser.add_formatter('h5audio', bb64_h5video, replace_links=False)
+	parser.add_formatter('h5video', bb64_h5video, replace_links=False)
 	parser.add_formatter('audio', bb64_h5audio, replace_links=False)
 	parser.add_formatter('youtube', bb64_youtube, replace_links=False)
 	parser.add_formatter('youtubehd', bb64_youtube, replace_links=False)

@@ -1,5 +1,18 @@
+
 @import "sixtyfour/static/css/syntax/light";
 // sixtyfour/static/css/syntax/dark is an option for dark theme
+
+.bbcode {
+	.card-header {
+		padding:0.375rem 0.75rem;
+
+		button {
+			padding:0rem;
+			text-align:left;
+			width:100%;
+		}
+	}
+}
 
 .bbcode-img {
 	max-width:100%;

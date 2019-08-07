@@ -49,7 +49,7 @@ def user_avatar(user):
 def formatted(context, post=None, truncate=None):
 	if not post:
 		post = context['post']
-	ctx = {}
+	ctx = {'preview':True} if truncate else {}
 	[ctx.update(c) for c in context.dicts]
 	res = bbcode64(post, ctx)
 	if truncate:

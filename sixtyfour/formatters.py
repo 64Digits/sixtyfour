@@ -293,6 +293,7 @@ def ExtendedParser():
 	parser.add_simple_formatter('u2', '<span style="border-bottom: 1px dotted;">%(value)s</span>')
 	parser.add_simple_formatter('em', '<span style="color:#FFF; background-color: #CC0000;">%(value)s</span>')
 	parser.add_simple_formatter('ln', '<hr />', standalone=True)
+	parser.add_simple_formatter('flex', '<div class="bbcode-flex">%(value)s</div>')
 
 	parser.add_formatter('img', bb64_img, replace_links=False)
 	parser.add_simple_formatter('right', '<span class="bbcode-right">%(value)s</span>', transform_newlines=False)

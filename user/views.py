@@ -48,9 +48,10 @@ class PostCommentListView(WithSidebar,ListView):
 	paginate_by = 10
 
 	def with_context(self,context):
+		post = get_object_or_404(Post,id=self.kwargs['entry'])
 		return {
-			'op': get_object_or_404(get_user_model(),username=self.kwargs['username']),
-			'post': get_object_or_404(Post,id=self.kwargs['entry']),
+			'post': post,
+			'op': post.user,
 		}
 
 	def get_queryset(self):

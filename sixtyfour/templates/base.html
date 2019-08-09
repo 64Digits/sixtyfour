@@ -28,6 +28,9 @@
 					{% for sidebar_module in sidebar %}
 						{% include 'include/sidebar.html' %}
 					{% endfor %}
+					{% for sidebar_module in global_sidebar %}
+						{% include 'include/sidebar.html' %}
+					{% endfor %}
 					</div>
 				</div>
 			</div>

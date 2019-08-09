@@ -3,14 +3,25 @@
 // sixtyfour/static/css/syntax/dark is an option for dark theme
 
 .bbcode {
+	.card, .card-header {
+		background-color:transparent;
+		border-style:none;
+	}
+
 	.card-header {
 		padding:0.375rem 0.75rem;
 
 		button {
 			padding:0rem;
 			text-align:left;
-			width:100%;
 		}
+	}
+
+	.card-body {
+		background-color:$gray-100;
+		border-left:2px solid $gray-500;
+		margin-left:1.25rem;
+		padding:0.75rem 1.25rem;
 	}
 }
 
@@ -18,17 +29,20 @@
 	max-width:100%;
 	height:auto;
 }
+
 .bbcode-right {
     display: flex;
     flex-direction: column;
     place-items: flex-end;
 }
+
 .preview {
 	img {
 		max-width:10em;
 		max-height:10em;
 	}
 }
+
 .bbcode-flex {
 	display: flex;
 	flex-direction: row;
@@ -37,12 +51,14 @@
 }
 
 .bbcode-code {
-	box-sizing: border-box;
-	box-shadow: 2px 2px 2px lightgray;
 
-	.highlight pre {
-		margin: 0;
-		padding: 0.25rem;
-		padding-left: 1rem;
+	.highlight {
+		background-color:transparent;
+		overflow:auto;
+
+		pre {
+			margin: 0;
+			padding:0;
+		}
 	}
 }

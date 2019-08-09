@@ -332,10 +332,14 @@ def bb64_code(tag_name, value, options, parent, context):
 			lexer = guess_lexer(value)
 		except ClassNotFound:
 			lexer = get_lexer_by_name('text')
-			
+	title="" if lang == 'text' else lang
 	formatter = HtmlFormatter(linenos=False)
 	result = highlight(value, lexer, formatter)
-	return format_html("""<div class="bbcode-code">{result}</div>""", result=mark_safe(mark_safe(result)))
+	return format_html("""
+	<div class="card card-code">
+		<div class="card-body bbcode-code"><span class="text-muted float-right">{title}</span>{result}</div>
+	</div>
+	""", title=title, result=mark_safe(mark_safe(result)))
 
 def ExtendedParser():
 	parser = Parser()
@@ -356,7 +360,7 @@ def ExtendedParser():
 
 	bind('img', bb64_img, replace_links=False)
 	bind('quote', bb64_quote, swallow_trailing_newline=True)
-	bind('code', bb64_code, render_embedded=False, escape_html=False)
+	bind('code', bb64_code, render_embedded=False, escape_html=False, replace_cosmetic=False)
 	bind('rev', bb64_rev)
 	bind('font', bb64_font)
 	bind('size', bb64_size)

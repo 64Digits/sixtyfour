@@ -1,10 +1,8 @@
 .sidebar {
 	margin:0rem 1rem;
-	//background-color:#e9ecef;
 	
 	.sidebar-module {
 		//border: 1px solid rgba(0,0,0,0.35);
-		//border-radius: 0.2rem;
 	}
 
 	.sidebar-title {
@@ -15,21 +13,24 @@
 		display:block;
 		width:100%;
 		background-color:$primary;
-		box-shadow: 0rem -0.3rem 0.1rem -0.3rem rgba(0,40,150,0.5) inset,	0rem 0.3rem 0.1rem -0.3rem rgba(255,255,255,0.5) inset;
 		border:0px solid transparent;
+
+		background-color:#fff;
+		border-bottom:2px solid $primary;
 		
 		&, &:hover, &:active,
 		&:link, &:visited, &:focus {
 			color:#fff;
+			color:$primary;
 			text-decoration:none;
 		}
 
 		&.collapsed {
-			background-color:grayscale($primary);
+			background-color:$gray-200;
 		}
 	}
 
 	.sidebar-content {
-		box-shadow: 0rem 0.3rem 0.1rem -0.3rem rgba(0,0,0,0.25) inset;
+		box-shadow: 0rem 0.3rem 0.1rem -0.3rem rgba(0,0,0,0.125) inset;
 	}
 }

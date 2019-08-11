@@ -22,23 +22,6 @@ class Profile(models.Model):
 	def __str__(self):
 		return 'Profile: %s' % (self.user.username)
 
-class PostManager(models.Manager):
-	def get_queryset(self):
-		return super().get_queryset().filter(deleted=False)
-
-class FrontPostManager(models.Manager):
-	def get_queryset(self):
-		return super().get_queryset().filter(deleted=False, show_recent=True)
-
-class NewsPostManager(models.Manager):
-	def get_queryset(self):
-		return super().get_queryset().filter(deleted=False, pinned=True, show_recent=True)
-
-class UserPostManager(models.Manager):
-	def get_queryset(self):
-		return super().get_queryset().filter(deleted=False)
-
-
 class PostVisibility():
 	PUBLIC=0
 	REGISTERED=1
@@ -52,6 +35,22 @@ class PostVisibility():
 		(GROUP, 'Group Members'),
 		(PERSONAL, 'Only Me')
 	]
+
+class PostManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False)
+
+class FrontPostManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False, show_recent=True, private=PostVisibility.PUBLIC)
+
+class NewsPostManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False, pinned=True, show_recent=True, private=PostVisibility.PUBLIC)
+
+class UserPostManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset().filter(deleted=False, private=PostVisibility.PUBLIC)
 
 class Post(models.Model):
 	title = models.CharField(max_length=100)

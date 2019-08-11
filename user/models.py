@@ -38,16 +38,35 @@ class UserPostManager(models.Manager):
 	def get_queryset(self):
 		return super().get_queryset().filter(deleted=False)
 
+
+class PostVisibility():
+	PUBLIC=0
+	REGISTERED=1
+	REGULAR=2
+	GROUP=3
+	PERSONAL=4
+	choices = [
+		(PUBLIC, 'Public'),
+		(REGISTERED, 'Registered Members'),
+		(REGULAR, 'Regular Members'),
+		(GROUP, 'Group Members'),
+		(PERSONAL, 'Only Me')
+	]
+
 class Post(models.Model):
 	title = models.CharField(max_length=100)
 	entry = models.TextField()
 
 	created = models.DateTimeField(auto_now_add=True)
-	updated = models.DateTimeField(auto_now=True)
+	updated = models.DateTimeField(null=True, default=None)
 
 	show_recent = models.BooleanField(default=True)
 	pinned = models.BooleanField(default=False)
 	locked = models.BooleanField(default=False)
+	private = models.SmallIntegerField(
+		choices=PostVisibility.choices,
+		default=PostVisibility.PUBLIC
+	)
 	deleted = models.BooleanField(default=False)
 
 	user = models.ForeignKey(

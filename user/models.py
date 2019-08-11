@@ -55,22 +55,18 @@ class Post(models.Model):
 		on_delete=models.SET(get_sentinel_user)
 	)
 
-	objects = models.Manager()
 	posts = PostManager()
 	posts_front = FrontPostManager()
 	posts_news = NewsPostManager()
 	posts_user = UserPostManager()
+	objects = models.Manager()
 
-	@property
-	def formatted(self):
-		return bbcode64(self)
-
-	def __str__(self):
-		return '[%s] %s' % (self.user.username,self.title)
-	
 	@property
 	def comments_count(self):
 		return Comment.comments.filter(post=self).count()
+
+	def __str__(self):
+		return '[%s] %s' % (self.user.username,self.title)
 
 	class Meta:
 		ordering = ['-created']
@@ -93,12 +89,8 @@ class Comment(models.Model):
 		on_delete=models.SET(get_sentinel_user)
 	)
 
-	objects = models.Manager()
 	comments = CommentManager()
-
-	@property
-	def formatted(self):
-		return bbcode64(self)
+	objects = models.Manager()
 
 	class Meta:
 		ordering = ['created']

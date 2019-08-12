@@ -13,4 +13,15 @@
 	<div class="comment-info p-2 bg-light">
 		Posted by {% user comment.user %} on {{ comment.created }}
 	</div>
+	<div class="btn btn-link" data-toggle="collapse" data-target="#comment-level-{{comment.id}}">
+		{% if comment.children %}
+			🠺 {{comment.children|length}} comment(s)
+		{% else %}
+		{% endif %}
+	</div>
+	<div id="comment-level-{{comment.id}}" class="comment-replies show">
+		{% for child_comment in comment.children %}
+			{% include "include/comment.html" with comment=child_comment %}
+		{% endfor %}
+	</div>
 </div>

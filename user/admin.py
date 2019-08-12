@@ -7,7 +7,7 @@ from .models import Post,Comment,Profile
 class CommentInline(admin.TabularInline):
 	model = Comment
 	extra = 1
-	fields = ['entry','user','deleted']
+	fields = ['entry','user','deleted','parent']
 
 class PostAdmin(admin.ModelAdmin):
 	list_display = ('title','user','created')

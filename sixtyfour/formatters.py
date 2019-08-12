@@ -75,7 +75,9 @@ def bb64_color(tag_name, value, options, parent, context):
 def bb64_tnail(tag_name, value, options, parent, context):
 	width = '204'
 	height = ''
-	gallery_id = 'gallery'
+	post_id = context['post'].id
+	gallery_id = f"gallery-{post_id}"
+
 	title = 'Image thumbnail'
 	if 'width' in options:
 		width = options['width']
@@ -355,6 +357,10 @@ def ExtendedParser():
 	parser.add_simple_formatter('right', '<span class="bbcode-right">%(value)s</span>', transform_newlines=False)
 	parser.add_simple_formatter('flex', '<div class="bbcode-flex">%(value)s</div>')
   
+	parser.add_simple_formatter('u2', '<span style="border-bottom: 1px dotted gray;">%(value)s</span>')
+	parser.add_simple_formatter('o', '<span style="text-decoration: overline;">%(value)s</span>')
+	parser.add_simple_formatter('br', '<br />', standalone=True)
+	
 	def bind(*args,**kwargs):
 		parser.add_formatter(*args, **kwargs)
 

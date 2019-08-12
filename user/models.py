@@ -107,8 +107,14 @@ class Comment(models.Model):
 		on_delete=models.SET(get_sentinel_user)
 	)
 
+	parent = models.ForeignKey('self', on_delete=models.DO_NOTHING, blank=True, null=True, default=None)
+
 	comments = CommentManager()
 	objects = models.Manager()
+
+	@property
+	def children(self):
+		return self.comment_set.all()
 
 	class Meta:
 		ordering = ['created']

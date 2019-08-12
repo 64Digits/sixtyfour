@@ -56,4 +56,4 @@ class PostCommentListView(WithSidebar,ListView):
 
 	def get_queryset(self):
 		entry = self.kwargs['entry']
-		return Comment.comments.filter(post__id=entry)
+		return Comment.comments.filter(post__id=entry, parent=None)

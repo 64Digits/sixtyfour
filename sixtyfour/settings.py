@@ -148,6 +148,10 @@ NODE_MODULES_URL = STATIC_URL + 'node_modules/'
 
 SASS_PROCESSOR_ROOT = 'sixtyfour/static/compiled'
 
+AVATAR_ROOT = ''
+AVATAR_URL = ''
+BANNER_ROOT = ''
+BANNER_URL = ''
 
 # Default Site Branding.
 

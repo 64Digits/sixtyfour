@@ -20,6 +20,14 @@ class Profile(models.Model):
 		primary_key = True
 	)
 
+	@property
+	def get_avatar_url():
+		return "%s%s" % settings.AVATAR_URL, self.avatar
+
+	@property
+	def get_banner_url():
+		return "%s%s" % settings.BANNER_URL, self.banner
+
 	def __str__(self):
 		return 'Profile: %s' % (self.user.username)
 

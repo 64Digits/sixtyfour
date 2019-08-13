@@ -38,7 +38,7 @@ def user(user):
 def user_avatar(user):
 	tpl='<img title="{}" class="avatar" src="{}"/>'
 
-	if hasattr(user, 'profile'):
+	if hasattr(user, 'profile') and user.profile.avatar:
 		args=[user.username + "'s avatar", user.profile.avatar_url]
 	else:
 		args=['Default avatar', '/static/images/default_avatar.png']

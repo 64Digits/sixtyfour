@@ -1,5 +1,5 @@
 <div class="bg-secondary mb-4 banner-container" style="height:200px;">
-{% if op.profile %}
+{% if op.profile and op.profile.banner %}
 	<img class="banner" src="{{ op.profile.banner_url }}">
 {% endif %}
 </div>

@@ -7,7 +7,8 @@ def get_sentinel_user():
 	return get_user_model().objects.get_or_create(username='deleted')[0]
 
 class Profile(models.Model):
-	avatar = models.URLField()
+	avatar = models.CharField(max_length=128)
+	banner = models.CharField(max_length=128)
 	profile = models.TextField()
 	location = models.CharField(max_length=40)
 	hit_counter = models.IntegerField()

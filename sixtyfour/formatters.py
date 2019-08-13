@@ -76,7 +76,7 @@ def bb64_tnail(tag_name, value, options, parent, context):
 	width = '204'
 	height = ''
 	post_id = context['post'].id
-	gallery_id = f"gallery-{post_id}"
+	gallery_id = "gallery-%s" % post_id
 
 	title = 'Image thumbnail'
 	if 'width' in options:

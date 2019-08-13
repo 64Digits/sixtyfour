@@ -21,12 +21,12 @@ class Profile(models.Model):
 	)
 
 	@property
-	def get_avatar_url(self):
-		return "%s%s" % settings.AVATAR_URL, self.avatar
+	def avatar_url(self):
+		return "%s%s" % (settings.AVATAR_URL, self.avatar)
 
 	@property
-	def get_banner_url(self):
-		return "%s%s" % settings.BANNER_URL, self.banner
+	def banner_url(self):
+		return "%s%s" % (settings.BANNER_URL, self.banner)
 
 	def __str__(self):
 		return 'Profile: %s' % (self.user.username)

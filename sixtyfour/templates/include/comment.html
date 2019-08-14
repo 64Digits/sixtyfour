@@ -1,27 +1,39 @@
+{% load humanize %}
 {% url 'user:post' post.user post.id as post_url %}
-<div class="comment border mb-4">
-	<div class="row no-gutters overflow-hidden flex-md-row h-md-250 position-relative">
-		<div class="col-auto d-none d-sm-block">
-			<div class="comment-avatar m-3">
-				{% user_avatar comment.user %}
+<div class="comment-info bg-light d-flex">
+	<div class="flex-grow-1">
+		<div class="p-2">
+			<span>{% user comment.user %}</span>
+			<span class="font-weight-light">{{ comment.created|naturaltime }}</span>
+		</div>
+	</div>
+	<div>
+		<div class="" data-toggle="collapse" data-target="#comment-{{comment.id}}">
+			<button class="btn btn-light p-1 m-1">
+				<span class="if-not-collapsed">&#8963;</span>
+				<span class="if-collapsed">&#8964;</span>
+			</button>
+		</div>
+	</div>
+</div>
+<div class="comment mb-3">
+	<div id="comment-{{comment.id}}" class="show">
+		<div class="row no-gutters overflow-hidden flex-md-row h-md-250 position-relative">
+			<div class="col-auto d-none d-sm-block">
+				<div class="comment-avatar m-3">
+					{% user_avatar comment.user %}
+				</div>
+			</div>
+			<div class="col pl-1 pr-3 pt-2">
+				<div class="comment-entry">
+					{% formatted comment %}
+				</div>
 			</div>
 		</div>
-		<div class="col pl-1 pr-3 pt-2">
-			{% formatted comment %}
+		<div id="comment-level-{{comment.id}}" class="comment-replies show">
+			{% for child_comment in comment.children %}
+				{% include "include/comment.html" with comment=child_comment %}
+			{% endfor %}
 		</div>
-	</div>
-	<div class="comment-info p-2 bg-light">
-		Posted by {% user comment.user %} on {{ comment.created }}
-	</div>
-	<div class="btn btn-link" data-toggle="collapse" data-target="#comment-level-{{comment.id}}">
-		{% if comment.children %}
-			🠺 {{comment.children|length}} comment(s)
-		{% else %}
-		{% endif %}
-	</div>
-	<div id="comment-level-{{comment.id}}" class="comment-replies show">
-		{% for child_comment in comment.children %}
-			{% include "include/comment.html" with comment=child_comment %}
-		{% endfor %}
 	</div>
 </div>

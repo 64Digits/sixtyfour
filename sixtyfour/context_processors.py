@@ -1,4 +1,5 @@
 from django.conf import settings
+from user.views import LoginBar, LoggedInBar
 
 def site_branding(request):
 	return {
@@ -7,8 +8,13 @@ def site_branding(request):
 	}
 
 def sidebars(request):
+	global_sidebar = []
+	if request.user.is_authenticated:
+		global_sidebar.append(LoggedInBar())
+	else:
+		global_sidebar.append(LoginBar())
 	return {
-		'global_sidebar': []
+		'global_sidebar': global_sidebar
 	}
 
 all_processors = [

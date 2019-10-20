@@ -30,9 +30,11 @@ def pagination(context, *args, **kwargs):
 	return context
 
 @register.simple_tag
-def user(user):
+def user(user, display=None):
 	url=reverse('user:listing', kwargs={'username':user.username})
-	return format_html('<a href="{}">{}</a>',mark_safe(url),user.username)
+	if not display:
+		display = user.username
+	return format_html('<a href="{}">{}</a>',mark_safe(url),display)
 
 @register.simple_tag
 def user_avatar(user):

@@ -12,7 +12,7 @@ class Profile(models.Model):
 	profile = models.TextField()
 	location = models.CharField(max_length=40)
 	hit_counter = models.IntegerField()
-	old_password = models.CharField(max_length=512, default=None)
+	old_password = models.CharField(max_length=512, blank=True, default='')
 	
 	user = models.OneToOneField(
 		settings.AUTH_USER_MODEL,

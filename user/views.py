@@ -14,6 +14,14 @@ class ProfileBar(Sidebar):
 	name = "profile"
 	title = "Profile"
 
+class LoginBar(Sidebar):
+	name = "login"
+	title = "Login"
+
+class LoggedInBar(Sidebar):
+	name = "loggedin"
+	title = "Actions"
+
 class FrontListView(WithSidebar,ListView):
 	template_name = 'user/home.html'	
 	context_object_name = 'posts'
@@ -48,7 +56,7 @@ class PostCommentListView(WithSidebar,ListView):
 	paginate_by = 10
 
 	def with_context(self,context):
-		post = get_object_or_404(Post,id=self.kwargs['entry'])
+		post = get_object_or_404(Post.posts_user,id=self.kwargs['entry'])
 		return {
 			'post': post,
 			'op': post.user,

@@ -12,7 +12,8 @@ def sidebars(request):
 	if request.user.is_authenticated:
 		global_sidebar.append(LoggedInBar())
 	else:
-		global_sidebar.append(LoginBar())
+		if request.resolver_match.view_name != 'sixtyfour:login':
+			global_sidebar.append(LoginBar())
 	return {
 		'global_sidebar': global_sidebar
 	}

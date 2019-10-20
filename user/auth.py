@@ -5,7 +5,10 @@ import bcrypt
 User = get_user_model()
 
 def check_bcrypt(pw,pw_hash):
-	return bcrypt.hashpw(pw.encode(),pw_hash.encode()) == pw_hash.encode()
+	try:
+		return bcrypt.hashpw(pw.encode(),pw_hash.encode()) == pw_hash.encode()
+	except ValueError:
+		return False
 
 def check_bh1(pw):
 	return md5(sha1(md5(pw.encode()).hexdigest().encode()).hexdigest().encode()).hexdigest()

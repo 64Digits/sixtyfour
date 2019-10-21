@@ -9,4 +9,5 @@ urlpatterns = [
 	path('<username>/page/<int:page>', views.UserPostListView.as_view(), name='listing'),
 	path('<username>/post/<int:entry>', views.PostCommentListView.as_view(), name='post'),
 	path('<username>/post/<int:entry>/page/<int:page>', views.PostCommentListView.as_view(), name='post'),
+	path('<username>/post/<int:pk>/edit', views.PostUpdate.as_view(), name='post_edit'),
 ]

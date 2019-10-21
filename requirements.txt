@@ -1,5 +1,6 @@
 libsass
 django-sass-processor
+django-crispy-forms
 bbcode
 markdown
 Pygments

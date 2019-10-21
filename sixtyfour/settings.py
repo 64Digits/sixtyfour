@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'django.contrib.humanize',
+	'crispy_forms',
     'sass_processor'
 ]
 
@@ -156,6 +157,8 @@ STATICFILES_FINDERS = [
 NODE_MODULES_URL = STATIC_URL + 'node_modules/'
 
 SASS_PROCESSOR_ROOT = 'sixtyfour/static/compiled'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 AVATAR_ROOT = ''
 AVATAR_URL = ''

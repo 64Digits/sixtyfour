@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.urls import reverse
 from sixtyfour.formatters import bbcode64
 
 def get_sentinel_user():
@@ -91,6 +92,9 @@ class Post(models.Model):
 	@property
 	def comments_count(self):
 		return Comment.comments.filter(post=self).count()
+
+	def get_absolute_url(self):
+		return reverse('user:post', kwargs={'username': self.user.username, 'entry': self.id})
 
 	def __str__(self):
 		return '[%s] %s' % (self.user.username,self.title)

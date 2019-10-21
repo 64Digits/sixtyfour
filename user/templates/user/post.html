@@ -28,6 +28,14 @@
         </div>
     {% endif %}
 
+	<div class="post-actions mb-4 d-flex flex-row-reverse">
+		<div class="btn-group" role="group" aria-label="Post Actions">
+		{% if post.user == request.user %}
+			<a class="btn btn-sm btn-outline-secondary" href="{% url 'user:post_edit' username=post.user.username pk=post.id %}">Edit</a>
+		{% endif %}
+		</div>
+	</div>
+
 	<h3 class="mb-4">Comments</h3>
 	<div class="comments">
 	{% for comment in comments %}

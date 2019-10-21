@@ -1,8 +1,16 @@
 from django.views.generic.list import ListView
 from django.shortcuts import get_object_or_404
+from django.urls import reverse
+from django.core.exceptions import PermissionDenied
+
+from django.contrib.auth import get_user_model
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+from crispy_forms.layout import Submit
 
 from .models import Post, Comment
-from django.contrib.auth import get_user_model
+from .forms import PostForm
 
 from sixtyfour.sidebar import Sidebar,WithSidebar
 
@@ -65,3 +73,37 @@ class PostCommentListView(WithSidebar,ListView):
 	def get_queryset(self):
 		entry = self.kwargs['entry']
 		return Comment.comments.filter(post__id=entry, parent=None)
+
+class PostCreate(LoginRequiredMixin,WithSidebar,CreateView):
+	model = Post
+	form_class = PostForm
+
+	def get_form(self, form_class=None):
+		form = super().get_form(form_class)
+		form.helper.form_action = reverse('sixtyfour:submit')
+		form.helper.add_input(Submit('submit', 'Submit', css_class='btn-primary'))
+		return form
+
+	def form_valid(self, form):
+		form.instance.user = self.request.user
+		return super().form_valid(form)
+
+class PostUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
+	model = Post
+	form_class = PostForm
+
+	def permission_check(self, form):
+		can_edit = form.instance.user == self.request.user
+		if not can_edit:
+			raise PermissionDenied
+
+	def get_form(self, form_class=None):
+		form = super().get_form(form_class)
+		self.permission_check(form)
+		form.helper.form_action = reverse('user:post_edit', kwargs={'username': self.object.user.username, 'pk': self.object.id} )
+		form.helper.add_input(Submit('submit', 'Save', css_class='btn-primary'))
+		return form
+
+	def form_valid(self, form):
+		self.permission_check(form)
+		return super().form_valid(form)

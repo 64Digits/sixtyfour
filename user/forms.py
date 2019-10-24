@@ -13,6 +13,9 @@ class CrispyForm(forms.ModelForm):
 class PostForm(CrispyForm):
 	class Meta:
 		model = Post
-		fields = ['title','entry','private']
-		labels = {'private': 'Visibility'}
+		fields = ['title','entry','private','show_recent']
+		labels = {
+			'show_recent': 'Show on Front Page',
+			'private': 'Visibility'
+		}
 

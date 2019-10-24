@@ -1,10 +1,11 @@
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView
+
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 
 from django.contrib.auth import get_user_model
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from crispy_forms.layout import Submit
@@ -34,13 +35,17 @@ class FrontListView(WithSidebar,ListView):
 	template_name = 'user/home.html'	
 	context_object_name = 'posts'
 	paginate_by = 10
-	queryset = Post.posts_front.all()
 	context = {'heading':'Recent Posts'}
 	sidebars = [WelcomeBar()]
 
+	def get_queryset(self):
+		return Post.posts_visible(self.request.user).filter(show_recent=True)
+
 class NewsListView(FrontListView):
-	queryset = Post.posts_news.all()
 	context = {'heading':'Recent News'}
+
+	def get_queryset(self):
+		return Post.posts_visible(self.request.user).filter(pinned=True, show_recent=True)
 
 class UserPostListView(WithSidebar,ListView):
 	template_name = 'user/listing.html'
@@ -55,7 +60,7 @@ class UserPostListView(WithSidebar,ListView):
 
 	def get_queryset(self):
 		user = self.kwargs['username']
-		return Post.posts_user.filter(user__username=user)
+		return Post.posts_visible(self.request.user).filter(user__username=user)
 
 class PostCommentListView(WithSidebar,ListView):
 	template_name = 'user/post.html'
@@ -64,7 +69,9 @@ class PostCommentListView(WithSidebar,ListView):
 	paginate_by = 10
 
 	def with_context(self,context):
-		post = get_object_or_404(Post.posts_user,id=self.kwargs['entry'])
+		post = get_object_or_404(Post.posts,id=self.kwargs['entry'])
+		if not post.user_can_view(self.request.user):
+			raise PermissionDenied
 		return {
 			'post': post,
 			'op': post.user,

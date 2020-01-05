@@ -28,7 +28,15 @@
 				<div class="comment-entry">
 					{% formatted comment %}
 				</div>
+				<div class="post-actions mb-4 d-flex flex-row-reverse">
+					<div class="btn-group" role="group" aria-label="Post Actions">
+					{% if comment.user == request.user %}
+						<a class="btn btn-sm btn-outline-secondary" href="{% url 'user:comment_edit' pk=comment.id %}">Edit</a>
+					{% endif %}
+					</div>
+				</div>
 			</div>
+
 		</div>
 		<div id="comment-level-{{comment.id}}" class="comment-replies show">
 			{% for child_comment in comment.children %}

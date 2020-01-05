@@ -1,7 +1,8 @@
 from django import forms
 from django.urls import reverse
+from django.forms import Textarea
 
-from .models import Post
+from .models import Post, Comment
 
 from crispy_forms.helper import FormHelper
 
@@ -17,5 +18,16 @@ class PostForm(CrispyForm):
 		labels = {
 			'show_recent': 'Show on Front Page',
 			'private': 'Visibility'
+		}
+
+class CommentForm(CrispyForm):
+	class Meta:
+		model = Comment
+		fields = ['entry']
+		labels = {
+			'entry': ''
+		}
+		widgets = {
+			'entry': Textarea(attrs={'cols': 40, 'rows': 4})
 		}
 

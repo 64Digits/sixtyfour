@@ -76,7 +76,7 @@ class PostCommentListView(WithSidebar,ListView):
 		form = CommentForm()
 		form.helper.form_action = self.request.get_full_path()
 		sub = Submit('submit', 'Post Comment')
-		sub.field_classes = 'btn btn-outline-secondary'
+		sub.field_classes = 'btn btn-sm btn-outline-secondary'
 		form.helper.add_layout(Div(
 			form.helper.layout,
 			Div(sub, css_class='d-flex flex-row-reverse mb-3')

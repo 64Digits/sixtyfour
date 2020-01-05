@@ -1,17 +1,19 @@
 {% load humanize %}
 {% url 'user:post' post.user post.id as post_url %}
-<div class="comment-info bg-light d-flex">
+<div class="comment-info d-flex border-bottom lead">
 	<div class="flex-grow-1">
 		<div class="p-2">
 			<span>{% user comment.user %}</span>
-			<span class="font-weight-light">{{ comment.created|naturaltime }}</span>
+			<small class="font-weight-light text-muted">{{ comment.created|naturaltime }}</small>
 		</div>
 	</div>
 	<div>
 		<div class="" data-toggle="collapse" data-target="#comment-{{comment.id}}">
-			<button class="btn btn-light p-1 m-1">
-				<span class="if-not-collapsed">&#8963;</span>
-				<span class="if-collapsed">&#8964;</span>
+			<button class="btn p-1 m-1">
+				<span class="if-not-collapsed font-weight-light text-muted">[-]</span> 
+				<span class="if-collapsed font-weight-light">[+]</span>
+				{# <span class="if-not-collapsed">&#8963;</span> #}
+				{# <span class="if-collapsed">&#8964;</span> #}
 			</button>
 		</div>
 	</div>

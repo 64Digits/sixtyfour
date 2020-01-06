@@ -169,7 +169,7 @@ class PostDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 
 	def with_context(self,context):
 		post = get_object_or_404(Post.posts,id=self.kwargs['pk'])
-		if not post.user_can_view(self.request.user):
+		if not post.user_can_view(self.request.user) or post.user != self.request.user:
 			raise PermissionDenied
 		self.form = ConfirmDeleteForm()
 		self.form.helper.form_action = self.request.get_full_path()
@@ -186,6 +186,8 @@ class PostDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 			action = request.POST.get('submit', 'Cancel')
 			if action == 'Delete':
 				post = get_object_or_404(Post.posts,id=self.kwargs['pk'])
+				if post.user != request.user:
+					raise PermissionDenied
 				post.deleted = True
 				post.save()
 				redirect = reverse('user:listing', kwargs={'username':request.user.username})

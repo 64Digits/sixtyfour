@@ -21,6 +21,11 @@ class PostAdmin(admin.ModelAdmin):
 	raw_id_fields = ('user',)
 	inlines = [CommentInline]
 
+	def get_queryset(self,request):
+		if not hasattr(self, '_queryset'):
+			self._queryset = Post.objects.all()
+		return self._queryset
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Profile)
 

@@ -1,5 +1,6 @@
+from django.views.generic import TemplateView
 from django.views.generic.list import ListView
-from django.views.generic.edit import CreateView, DeleteView, UpdateView
+from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormView
 
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -12,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from crispy_forms.layout import Div, Submit
 
 from .models import Post, Comment
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, ConfirmDeleteForm
 
 from sixtyfour.sidebar import Sidebar,WithSidebar
 
@@ -160,3 +161,35 @@ class CommentUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 			'username': self.object.post.user.username, 
 			'entry': self.object.post.id
 		})
+
+class PostDelete(LoginRequiredMixin,WithSidebar,TemplateView):
+	template_name = 'user/post_delete.html'
+	form_class = ConfirmDeleteForm
+	sidebars = [ProfileBar()]
+
+	def with_context(self,context):
+		post = get_object_or_404(Post.posts,id=self.kwargs['pk'])
+		if not post.user_can_view(self.request.user):
+			raise PermissionDenied
+		self.form = ConfirmDeleteForm()
+		self.form.helper.form_action = self.request.get_full_path()
+		return {
+			'post': post,
+			'form': self.form,
+			'op': post.user,
+		}
+
+	def post(self, request, *args, **kwargs):
+		form = ConfirmDeleteForm(request.POST)
+
+		if form.is_valid():
+			action = request.POST.get('submit', 'Cancel')
+			if action == 'Delete':
+				post = get_object_or_404(Post.posts,id=self.kwargs['pk'])
+				post.deleted = True
+				post.save()
+				redirect = reverse('user:listing', kwargs={'username':request.user.username})
+				return HttpResponseRedirect(redirect)
+
+		redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':self.kwargs['pk']})
+		return HttpResponseRedirect(redirect)

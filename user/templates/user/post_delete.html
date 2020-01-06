@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="alert alert-danger" role="alert">
+Are you sure you want to delete the post <strong>{{ post.title }}</strong>?
+</div>
+{% crispy form %}
+{% endblock %}

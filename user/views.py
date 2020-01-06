@@ -164,7 +164,6 @@ class CommentUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 
 class PostDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 	template_name = 'user/post_delete.html'
-	form_class = ConfirmDeleteForm
 	sidebars = [ProfileBar()]
 
 	def with_context(self,context):
@@ -194,4 +193,38 @@ class PostDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 				return HttpResponseRedirect(redirect)
 
 		redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':self.kwargs['pk']})
+		return HttpResponseRedirect(redirect)
+
+class CommentDelete(LoginRequiredMixin,WithSidebar,TemplateView):
+	template_name = 'user/comment_delete.html'
+	sidebars = [ProfileBar()]
+
+	def with_context(self,context):
+		comment = get_object_or_404(Comment.comments,id=self.kwargs['pk'])
+		if not comment.post.user_can_view(self.request.user) or comment.user != self.request.user:
+			raise PermissionDenied
+		self.form = ConfirmDeleteForm()
+		self.form.helper.form_action = self.request.get_full_path()
+		return {
+			'comment': comment,
+			'form': self.form,
+			'op': comment.post.user,
+		}
+
+	def post(self, request, *args, **kwargs):
+		form = ConfirmDeleteForm(request.POST)
+
+		if form.is_valid():
+			action = request.POST.get('submit', 'Cancel')
+			if action == 'Delete':
+				comment = get_object_or_404(Comment.comments,id=self.kwargs['pk'])
+				if comment.user != request.user:
+					raise PermissionDenied
+				comment.deleted = True
+				comment.save()
+				redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':comment.post.id})
+				return HttpResponseRedirect(redirect)
+
+		comment = get_object_or_404(Comment.comments,id=self.kwargs['pk'])
+		redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':comment.post.id})
 		return HttpResponseRedirect(redirect)

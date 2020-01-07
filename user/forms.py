@@ -8,6 +8,8 @@ from django.contrib.auth import get_user_model
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div, Submit
 
+from django.contrib.auth.forms import PasswordChangeForm
+
 class CrispyModelForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
 		super(CrispyModelForm, self).__init__(*args, **kwargs)
@@ -66,3 +68,9 @@ class UserProfileForm(CrispyModelForm):
 	class Meta:
 		model = Profile
 		fields = ['profile']
+
+class PasswordChangeForm(PasswordChangeForm):
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.helper = FormHelper(self)
+		self.helper.add_input(Submit('submit', 'Change Password', css_class='btn-primary'))

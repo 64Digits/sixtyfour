@@ -20,6 +20,7 @@ from django.conf import settings
 
 from django.contrib.auth import views as auth_views
 from user.views import FrontListView, NewsListView, PostCreate, PreferencesView
+from .views import PasswordChangeView
 
 sixtyfour = ([
 	path('', FrontListView.as_view(), name='front'),
@@ -30,7 +31,8 @@ sixtyfour = ([
 	path('logout', auth_views.LogoutView.as_view(), name='logout'),
 	path('submit', PostCreate.as_view(), name='submit'),
 	path('preferences', PreferencesView.as_view(), name='preferences'),
-
+	path('preferences/password_change', PasswordChangeView.as_view(template_name='registration/password_change.html'), name='password_change'),
+	path('preferences/password_change_done', auth_views.PasswordChangeView.as_view(template_name='registration/password_change_done.html'), name='password_change_done'),
 ], 'sixtyfour')
 
 urlpatterns = [

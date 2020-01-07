@@ -12,8 +12,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from crispy_forms.layout import Div, Submit
 
-from .models import Post, Comment
-from .forms import PostForm, CommentForm, ConfirmDeleteForm
+from .models import Post, Comment, Profile
+from .forms import PostForm, CommentForm, ConfirmDeleteForm, UserForm, UserProfileForm
 
 from sixtyfour.sidebar import Sidebar,WithSidebar
 
@@ -228,3 +228,27 @@ class CommentDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 		comment = get_object_or_404(Comment.comments,id=self.kwargs['pk'])
 		redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':comment.post.id})
 		return HttpResponseRedirect(redirect)
+
+class PreferencesView(LoginRequiredMixin,WithSidebar,TemplateView):
+	template_name = 'user/preferences.html'
+	sidebars = [ProfileBar()]
+
+	def with_context(self,context):
+		user = self.request.user
+		uf = UserForm(prefix="uf",instance=user)
+		upf = UserProfileForm(prefix="upf",instance=user.profile)
+		return {
+			'op': user,
+			'user_form':uf,
+			'profile_form':upf
+		}
+
+	def post(self, request, *args, **kwargs):
+		user = self.request.user
+		uf = UserForm(request.POST,prefix="uf",instance=user)
+		upf = UserProfileForm(request.POST,prefix="upf",instance=user.profile)
+		if upf.is_valid() and uf.is_valid():
+			upf.save()
+			uf.save()
+			redirect = reverse('user:listing', kwargs={'username':request.user.username})
+			return HttpResponseRedirect(redirect)

@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from django.contrib.auth import views as auth_views
-from user.views import FrontListView, NewsListView, PostCreate
+from user.views import FrontListView, NewsListView, PostCreate, PreferencesView
 
 sixtyfour = ([
 	path('', FrontListView.as_view(), name='front'),
@@ -29,6 +29,8 @@ sixtyfour = ([
 	path('login', auth_views.LoginView.as_view(), name='login'),
 	path('logout', auth_views.LogoutView.as_view(), name='logout'),
 	path('submit', PostCreate.as_view(), name='submit'),
+	path('preferences', PreferencesView.as_view(), name='preferences'),
+
 ], 'sixtyfour')
 
 urlpatterns = [

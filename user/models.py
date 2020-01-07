@@ -16,7 +16,7 @@ class Profile(models.Model):
 	avatar = models.CharField(max_length=128)
 	banner = models.CharField(max_length=128)
 	profile = models.TextField()
-	location = models.CharField(max_length=40)
+	location = models.CharField(max_length=40, blank=True)
 	hit_counter = models.IntegerField()
 	old_password = models.CharField(max_length=512, blank=True, default='')
 	
@@ -39,6 +39,10 @@ class Profile(models.Model):
 		#return (datetime.now() - self.user.date_joined).days > 90
 		# All users are regular users
 		return True
+
+	@property
+	def entry(self):
+		return self.profile
 
 	@receiver(post_save, sender=User)
 	def create_user_profile(sender, instance, created, **kwargs):

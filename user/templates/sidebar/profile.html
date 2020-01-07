@@ -9,6 +9,12 @@
 	<div class="sidebar-profile text-center my-2">
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item"><strong class="d-inline-block text-primary">{% user op %}</strong></li>
+		</ul>
+		{% if op.profile.profile %}
+		{#<div class="m-5">{{ op.profile.profile }}</div>#}
+		<div class="mt-5 mb-5">{% formatted op.profile %}</div>
+		{% endif %}
+		<ul class="list-group list-group-flush">
 			<li class="list-group-item">{{ op.post_set.count }} Posts</li>
 			<li class="list-group-item">{{ op.comment_set.count }} Comments</li>
 			<li class="list-group-item">Joined {{ op.date_joined|naturaltime }}</li>

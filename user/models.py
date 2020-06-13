@@ -7,15 +7,27 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from django.dispatch import receiver
 from sixtyfour.formatters import bbcode64
-import datetime
+import datetime, hashlib, os
 
 def get_sentinel_user():
 	return get_user_model().objects.get_or_create(username='deleted')[0]
 
+def user_avatar_path(instance, filename):
+	name, ext = os.path.splitext(filename)
+	username = instance.user.username
+	newname = hashlib.sha1(username.encode('utf-8')).hexdigest() + ext
+	return 'profile/avatar/{}'.format(newname)
+
+def user_banner_path(instance, filename):
+	name, ext = os.path.splitext(filename)
+	username = instance.user.username
+	newname = hashlib.sha1(username.encode('utf-8')).hexdigest() + ext
+	return 'profile/banner/{}'.format(newname)
+
 class Profile(models.Model):
-	avatar = models.CharField(max_length=128)
-	banner = models.CharField(max_length=128)
-	profile = models.TextField()
+	avatar = models.ImageField(max_length=128,blank=True,upload_to=user_avatar_path)
+	banner = models.ImageField(max_length=128,blank=True,upload_to=user_banner_path)
+	profile = models.TextField(blank=True)
 	location = models.CharField(max_length=40, blank=True)
 	hit_counter = models.IntegerField()
 	old_password = models.CharField(max_length=512, blank=True, default='')
@@ -28,11 +40,13 @@ class Profile(models.Model):
 
 	@property
 	def avatar_url(self):
-		return "%s%s" % (settings.AVATAR_URL, self.avatar)
+		#return "%s%s" % (settings.AVATAR_URL, self.avatar)
+		return self.avatar.url
 
 	@property
 	def banner_url(self):
-		return "%s%s" % (settings.BANNER_URL, self.banner)
+		#return "%s%s" % (settings.BANNER_URL, self.banner)
+		return self.banner.url
 
 	@property
 	def is_regular(self):

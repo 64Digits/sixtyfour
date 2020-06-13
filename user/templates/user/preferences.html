@@ -4,7 +4,7 @@
 {% block content %}
 
 <h2>Preferences</h2>
-<form action="{% url 'sixtyfour:preferences' %}" method="post">
+<form action="{% url 'sixtyfour:preferences' %}" method="post" enctype="multipart/form-data">
 {% crispy user_form %}
 {% crispy profile_form %}
 </form>

@@ -39,15 +39,15 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-	'user.apps.UserConfig',
+    'user.apps.UserConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'django.contrib.humanize',
-	'crispy_forms',
+    'django.contrib.humanize',
+    'crispy_forms',
     'sass_processor'
 ]
 
@@ -142,7 +142,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-	os.path.join(BASE_DIR, 'sixtyfour/static'),
+    os.path.join(BASE_DIR, 'sixtyfour/static'),
     os.path.join(BASE_DIR, 'node_modules/jquery/dist'),
     os.path.join(BASE_DIR, 'node_modules/bootstrap/dist/js'),
     os.path.join(BASE_DIR, 'node_modules/@fancyapps/fancybox/dist'),
@@ -159,6 +159,11 @@ NODE_MODULES_URL = STATIC_URL + 'node_modules/'
 SASS_PROCESSOR_ROOT = 'sixtyfour/static/compiled'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+DEFAULT_FILE_STORAGE = 'sixtyfour.storage.OverwriteStorage'
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_URL = '/media/'
 
 AVATAR_ROOT = ''
 AVATAR_URL = ''

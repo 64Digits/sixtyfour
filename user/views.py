@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormVi
 
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, ViewDoesNotExist
 from django.http import HttpResponseRedirect
 
 from django.contrib.auth import get_user_model
@@ -244,9 +244,9 @@ class PreferencesView(LoginRequiredMixin,WithSidebar,TemplateView):
 		}
 
 	def post(self, request, *args, **kwargs):
-		user = self.request.user
+		user = request.user
 		uf = UserForm(request.POST,prefix="uf",instance=user)
-		upf = UserProfileForm(request.POST,prefix="upf",instance=user.profile)
+		upf = UserProfileForm(request.POST,request.FILES,prefix="upf",instance=user.profile)
 		if upf.is_valid() and uf.is_valid():
 			upf.save()
 			uf.save()

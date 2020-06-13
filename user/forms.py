@@ -67,7 +67,7 @@ class UserProfileForm(CrispyModelForm):
 
 	class Meta:
 		model = Profile
-		fields = ['profile']
+		fields = ['profile','avatar','banner']
 
 class PasswordChangeForm(PasswordChangeForm):
 	def __init__(self, *args, **kwargs):

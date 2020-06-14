@@ -3,6 +3,8 @@ from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 from django.template.defaultfilters import truncatewords_html
 
+import os,mimetypes
+
 from sixtyfour.formatters import bbcode64
 
 from django import template
@@ -31,19 +33,23 @@ def pagination(context, *args, **kwargs):
 
 @register.simple_tag
 def user(user, display=None):
-	url=reverse('user:listing', kwargs={'username':user.username})
 	if not display:
 		display = user.username
-	return format_html('<a href="{}">{}</a>',mark_safe(url),display)
+	return format_html('<a href="{}">{}</a>',mark_safe(user.profile.url),display)
 
 @register.simple_tag
-def user_avatar(user):
-	tpl='<img title="{}" class="avatar" src="{}"/>'
+def user_avatar(user, link=True):
+	if link:
+		args = [user.profile.url, user.username]
+		tpl = '<a href="{}"><img title="{}" class="avatar" src="{}"/></a>'
+	else:
+		args = [user.username]
+		tpl = '<img title="{}" class="avatar" src="{}"/>'
 
 	if hasattr(user, 'profile') and user.profile.avatar:
-		args=[user.username + "'s avatar", user.profile.avatar_url]
+		args += [user.profile.avatar_url]
 	else:
-		args=['Default avatar', '/static/images/default_avatar.png']
+		args += ['/static/images/default_avatar.png']
 
 	return format_html(tpl, *args)
 
@@ -58,3 +64,22 @@ def formatted(context, post=None, truncate=None):
 		return truncatewords_html(res, truncate)
 	else:
 		return res
+
+
+@register.inclusion_tag('include/file-preview.html')
+def file_preview(instance):
+	url = instance.url
+	name = instance.name
+	_, ext = os.path.splitext(name)
+	mime = mimetypes.guess_type(name)[0]
+	mime_general = mime.split('/')[0]
+	allowed_images = ['.bmp','.gif','.png','.apng','.jpx','.jpg','.jpeg','.webp','.ico']
+	image = ext in allowed_images
+	return {
+		'name': name,
+		'url': url,
+		'image': image,
+		'mime': mime,
+		'mime_general': mime_general,
+		'ext': ext
+	}

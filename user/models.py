@@ -39,6 +39,10 @@ class Profile(models.Model):
 	)
 
 	@property
+	def url(self):
+		return reverse('user:listing', kwargs={'username':self.user.username})
+
+	@property
 	def avatar_url(self):
 		#return "%s%s" % (settings.AVATAR_URL, self.avatar)
 		return self.avatar.url

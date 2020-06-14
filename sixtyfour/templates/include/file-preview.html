@@ -1,0 +1,11 @@
+{% if image %}
+<div class="file-preview-image">
+	<a href="{{ url }}">
+	<img class="img-fluid" title="{{ name }}" src="{{url}}"/>
+	</a>
+</div>
+{% else %}
+<span class="file-preview-text">
+	<a href="{{ url }}">{{ name }}</a>
+</span>
+{% endif %}

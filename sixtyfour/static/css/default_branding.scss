@@ -1,4 +1,10 @@
-$enable_rounded: false;
+$enable-rounded: false;
+$enable-shadows: true;
+$enable-gradients: true;
 $primary: hsl(0,66%,45%);
 //$link-color: hsl(200,75%,45%);
 $light: #e9ecef;
+
+$input-box-shadow: 4px 4px 0px rgba(#2E3842, .1);
+$btn-box-shadow: $input-box-shadow, inset 0 2px 0 rgba(#FFF, .15), inset 0 2px 2px rgba(#FFF, .075);
+

@@ -1,4 +1,29 @@
+@import "node_modules/bootstrap/scss/mixins/_box-shadow";
 
 .asteriskField {
 	display: none;
+}
+
+.input-group {
+	@if $enable-shadows {
+		@include box-shadow($input-box-shadow);
+		.custom-file-label,
+		.form-control {
+			@include box-shadow(none);
+		}
+	}
+}
+
+.file-preview {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.file-preview-container {
+	height:auto;
+}
+
+.file-preview-image img {
+	max-height:128px;
 }

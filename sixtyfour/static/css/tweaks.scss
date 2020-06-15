@@ -1,0 +1,28 @@
+@import "node_modules/bootstrap/scss/mixins/_box-shadow";
+
+.input-group {
+	@if $enable-shadows {
+		@include box-shadow($input-box-shadow);
+		.custom-file-label,
+		.form-control {
+			@include box-shadow(none);
+		}
+	}
+}
+
+.post-listing {
+	& > .card {
+		@if $enable-shadows {
+			@include box-shadow($input-box-shadow);
+		}
+	}
+}
+
+.bbcode { 
+	& > .card > .card-body,
+	& > .card > .collapse > .card-body {
+		@if $enable-shadows {
+			@include box-shadow($inset-box-shadow);
+		}
+	}
+}

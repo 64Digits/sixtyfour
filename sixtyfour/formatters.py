@@ -172,28 +172,39 @@ def bb64_quote(tag_name, value, options, parent, context):
 	""", target_user=target_user, value=mark_safe(value))
 
 @static_var(hide_index = 0)
-def bb64_hide(primary_reason, show=False, is_nsfw=False):
+def bb64_hide(primary_reason=None, show=False, header_class='', button_class='text-primary'):
 	@bb64_exempt_preview("")
 	def bb64_hide_internal(tag_name, value, options, parent, context):
-		reason = primary_reason
+		if primary_reason == None:
+			if_collapsed = "Show: "
+			if_not_collapsed = "Hide: "
+			reason = ""
+		else:
+			if_collapsed = ""
+			if_not_collapsed = ""
+			reason = primary_reason
 		if tag_name in options:
-			reason = primary_reason + options[tag_name]
+			reason += options[tag_name]
 
 		bb64_hide.hide_index += 1
 
 		params = {
-			'header_class':'bg-danger' if is_nsfw else '',
-			'button_class':'text-white' if is_nsfw else 'text-primary',
+			'header_class':header_class,
+			'button_class':button_class,
 			'show_class':'show' if show else '',
+			'collapsed_class':'' if show else 'collapsed',
 			'reason':reason,
 			'hide_id':"bbcode-hide-%d" % (bb64_hide.hide_index),
-			'value':mark_safe(value)
+			'value':mark_safe(value),
+			'if_collapsed':if_collapsed,
+			'if_not_collapsed':if_not_collapsed
 		}
 
 		return format_html("""
 			<div class="card">
 				<div class="card-header {header_class}">
-					<button class="btn btn-link {button_class}" data-toggle="collapse" data-target="#{hide_id}">
+					<button class="btn btn-link {button_class} {collapsed_class}" data-toggle="collapse" data-target="#{hide_id}">
+						<span class="if-collapsed">[+] {if_collapsed}</span><span class="if-not-collapsed">[-] {if_not_collapsed}</span>
 						{reason}
 					</button>
 				</div>
@@ -343,8 +354,8 @@ def bb64_code(tag_name, value, options, parent, context):
 	</div>
 	""", title=title, result=mark_safe(mark_safe(result)))
 
-def ExtendedParser():
-	parser = Parser()
+def ExtendedParser(*args, **kwargs):
+	parser = Parser(newline="<p></p>", *args, **kwargs)
 
 	simple=[
 		'b','i','u','em', 'tt',
@@ -372,9 +383,10 @@ def ExtendedParser():
 	bind('size', bb64_size)
 	bind('color', bb64_color)
 	bind('tnail', bb64_tnail, replace_links=False)
-	bind('hide', bb64_hide("Hide: "), swallow_trailing_newline=True)
-	bind('show', bb64_hide("Hide: ", show=True), swallow_trailing_newline=True)
-	bind('nsfw', bb64_hide("NSFW: ", is_nsfw=True), swallow_trailing_newline=True)
+	bind('hide', bb64_hide(), swallow_trailing_newline=True)
+	bind('show', bb64_hide(show=True), swallow_trailing_newline=True)
+	bind('nsfw', bb64_hide("NSFW: ", header_class='bg-danger', button_class='text-white'), swallow_trailing_newline=True)
+	bind('spoiler', bb64_hide("Spoiler: ", header_class='bg-dark', button_class='text-white'), swallow_trailing_newline=True)
 	bind('shh', bb64_shh, swallow_trailing_newline=True)
 	bind('blind', bb64_blind, swallow_trailing_newline=True)
 	bind('user', bb64_user)

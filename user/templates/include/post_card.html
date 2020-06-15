@@ -1,5 +1,6 @@
 {% url 'user:post' post.user post.id as post_url %}
-<div class="row no-gutters flex-sm-row mb-5">
+<div class="card mb-5"><div class="card-body">
+<div class="row no-gutters flex-sm-row ">
 	<div class="col col-lg-10 col-md-9 col-10">
 		<h3 class="mb-0"><a class="text-dark" href="{{ post_url }}">{{ post.title }}</a></h3>
 		<div class="mb-1">
@@ -42,3 +43,4 @@
 	</div>
 	{% endif %}
 </div>
+</div></div>

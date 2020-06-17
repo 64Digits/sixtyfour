@@ -12,7 +12,9 @@
 	height:auto;
 }
 
-.file-preview-image img {
+.file-preview-image img,
+.file-preview-audio audio,
+.file-preview-video video {
 	max-height:128px;
 }
 

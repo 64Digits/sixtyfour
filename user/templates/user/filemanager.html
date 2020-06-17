@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+<div class="card box-shadow">
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb bg-white m-0">
+		<li><img src="{% static 'images/icons/file_folder.png' %}" class="mr-2"/></li>
+	{% for bc in breadcrumbs %}
+		{% if bc.current %}
+		<li class="breadcrumb-item active text-body font-weight-bold" aria-current="page">{{bc.name}}</li>
+		{% elif bc.nav_dir %}
+		<li class="breadcrumb-item"><a href="{% url 'sixtyfour:filemanager' %}?folder={{bc.nav_dir}}">{{bc.name}}</a></li>
+		{% else %}
+		<li class="breadcrumb-item"><a href="{% url 'sixtyfour:filemanager' %}">{{bc.name}}</a></li>
+		{% endif %}
+	{% endfor %}
+  </ol>
+</nav>
+<div class="table-responsive">
+<table class="table table-sm table-break m-0">
+	<thead class="thead-light">
+		<tr>
+			<th width="32px"></th>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Size</th>
+			<th>Modified</th>
+			<th width="32px"></th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for folder in dirs %}
+		<tr>
+			<td><img src="{% static 'images/icons/file_folder.png' %}"/></td>
+			<td><a class="text-primary" href="{% url 'sixtyfour:filemanager' %}?folder={{folder.nav_dir}}">{{folder.name}}</a></td>
+			<td>Folder</td>
+			<td></td>
+			<td></td>
+			<td>
+				<a class="collapsed text-truncate" title="Show Actions" data-toggle="collapse" href="#collapse{{folder.name|slugify}}" role="button" aria-expanded="false" aria-controls="collapse{{folder.name|slugify}}">
+					<img class="if-not-collapsed" src="{% static 'images/icons/action_collapse.png' %}"/>
+					<img class="if-collapsed" src="{% static 'images/icons/action_expand.png' %}"/>
+				</a>
+			</td>
+		</tr>
+		<tr class="bg-gradient-light text-white collapse" id="collapse{{folder.name|slugify}}">
+			<td colspan="6">
+				<div class="d-flex">
+					<div class="flex-fill d-flex align-items-start">
+						<form class="mx-2" method="post">
+							{% csrf_token %}
+							<input type="hidden" name="folder" value="{{nav_dir}}"/>
+							<input type="hidden" name="delete" value="{{folder.name}}"/>
+							<input type="submit" class="btn btn-danger" value="Delete"/>
+						</form>
+						<form class="flex-fill" method="post">
+							{% csrf_token %}
+							<input type="hidden" name="folder" value="{{nav_dir}}"/>
+							<input type="hidden" name="old_name" value="{{folder.name}}"/>
+							<div class="input-group">
+								<input type="text" name="new_name" class="textinput textInput form-control" value="{{folder.name}}" required />
+								<div class="input-group-append">
+									<input class="btn btn-sm btn-info" type="submit" value="Rename"/>
+								</div>
+							</div>
+						</form>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+	{% endfor %}
+	{% for file in files %}
+		<tr>
+			<td><a href="{{file.url}}"><img src="{% file_icon file.name %}"/></a></td>
+			<td><a href="{{file.url}}">{{file.name}}</a></td>
+			<td>{{file.type|capfirst}}</td>
+			<td>{{file.size|filesizeformat}}</td>
+			<td>{{file.date|date}}</td>
+			<td>
+				<a class="collapsed" title="Show Actions" data-toggle="collapse" href="#collapse{{file.name|slugify}}" role="button" aria-expanded="false" aria-controls="collapse{{file.name|slugify}}">
+					<img class="if-not-collapsed" src="{% static 'images/icons/action_collapse.png' %}"/>
+					<img class="if-collapsed" src="{% static 'images/icons/action_expand.png' %}"/>
+				</a>
+			</td>
+		</tr>
+		<tr class="bg-gradient-light text-white collapse" id="collapse{{file.name|slugify}}">
+			<td colspan="6">
+				<div class="d-flex">
+					<div>
+						{% if file.preview %}
+						{% file_preview file.name file.url %}
+						{% endif %}
+					</div>
+					<div class="flex-fill d-flex align-items-start">
+						<form class="mx-2" method="post" action="{% url 'sixtyfour:filemanager' %}">
+							{% csrf_token %}
+							<input type="hidden" name="folder" value="{{nav_dir}}"/>
+							<input type="hidden" name="delete" value="{{file.name}}"/>
+							<input type="submit" class="btn btn-danger" value="Delete"/>
+						</form>
+						<form class="flex-fill" method="post" action="{% url 'sixtyfour:filemanager' %}">
+							{% csrf_token %}
+							<input type="hidden" name="folder" value="{{nav_dir}}"/>
+							<input type="hidden" name="old_name" value="{{file.name}}"/>
+							<div class="input-group">
+								<input type="text" name="new_name" class="textinput textInput form-control" value="{{file.name}}" required />
+								<div class="input-group-append">
+									<input class="btn btn-sm btn-info" type="submit" value="Rename"/>
+								</div>
+							</div>
+						</form>
+						</div>
+					</div>
+				</div>
+			</td>
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+</div>
+</div>
+{% endblock %}

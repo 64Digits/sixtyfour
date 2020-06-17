@@ -74,3 +74,26 @@ class PasswordChangeForm(PasswordChangeForm):
 		super().__init__(*args, **kwargs)
 		self.helper = FormHelper(self)
 		self.helper.add_input(Submit('submit', 'Change Password', css_class='btn-primary'))
+
+class UploadFilesForm(CrispyForm):
+	files = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
+	def __init__(self, *args, **kwargs):
+		super(UploadFilesForm, self).__init__(*args, **kwargs)
+		self.helper.form_tag = False
+		self.helper.form_show_labels = False
+
+class CreateFolderForm(CrispyForm):
+	new_folder = forms.CharField(strip=True)
+
+	def __init__(self, *args, **kwargs):
+		super(CreateFolderForm, self).__init__(*args, **kwargs)
+		self.helper.form_tag = False
+		self.helper.form_show_labels = False
+
+class FileRenameForm(forms.Form):
+	old_name = forms.CharField(strip=True)
+	new_name = forms.CharField(strip=True)
+
+class FileDeleteForm(forms.Form):
+	delete = forms.CharField(strip=True)

@@ -4,7 +4,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormVi
 
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
-from django.core.exceptions import PermissionDenied, ViewDoesNotExist
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
 
 from django.contrib.auth import get_user_model

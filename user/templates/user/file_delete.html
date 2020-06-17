@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="alert alert-danger" role="alert">
+Are you sure you want to delete <strong>{{name}}</strong>?
+</div>
+{% if directory and filelist|length > 0 %}
+<h4 class="text-danger">Deleting this folder will also delete the following files:</h4>
+<ul>
+{% for file in filelist %}
+	<li>{{file}}</li>
+{% endfor %}
+</ul>
+{% endif %}
+<div class="d-flex flex-row-reverse">
+<form class="mx-2" method="post" action="{% url 'sixtyfour:filemanager' %}">
+	{% csrf_token %}
+	<input type="hidden" name="folder" value="{{nav_dir}}"/>
+	<input type="hidden" name="delete" value="{{name}}"/>
+	<input type="hidden" name="confirm" value="yes"/>
+	<input type="submit" class="btn btn-danger" value="Delete"/>
+</form>
+</div>
+{% endblock %}

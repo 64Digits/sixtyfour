@@ -1,0 +1,17 @@
+{% if type == 'image' %}
+<div class="file-preview-image">
+	<a href="{{ url }}"><img class="img-fluid" title="{{ name }}" src="{{ url }}"/></a>
+</div>
+{% elif type == 'audio' %}
+<div class="file-preview-audio">
+	<audio src="{{ url }}" title="{{ name }}" preload="none" controls>Audio not supported.</audio>
+</div>
+{% elif type == 'video' %}
+<div class="file-preview-video">
+<video src="{{ url }}" title="{{ name }}" preload="none" controls>Video not supported.</video>
+</div>
+{% else %}
+<span class="file-preview-text">
+	<a href="{{ url }}">{{ name }}</a>
+</span>
+{% endif %}

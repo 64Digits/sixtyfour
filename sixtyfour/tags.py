@@ -3,9 +3,8 @@ from django.utils.safestring import mark_safe
 from django.utils.html import format_html
 from django.template.defaultfilters import truncatewords_html
 
-import os,mimetypes
-
 from sixtyfour.formatters import bbcode64
+from sixtyfour.filetypes import get_filetype, get_fileicon
 
 from django import template
 register = template.Library()
@@ -65,21 +64,15 @@ def formatted(context, post=None, truncate=None):
 	else:
 		return res
 
+@register.simple_tag()
+def file_icon(url):
+	return get_fileicon(url)
 
-@register.inclusion_tag('include/file-preview.html')
-def file_preview(instance):
-	url = instance.url
-	name = instance.name
-	_, ext = os.path.splitext(name)
-	mime = mimetypes.guess_type(name)[0]
-	mime_general = mime.split('/')[0]
-	allowed_images = ['.bmp','.gif','.png','.apng','.jpx','.jpg','.jpeg','.webp','.ico']
-	image = ext in allowed_images
+@register.inclusion_tag('include/filepreview.html')
+def file_preview(name,url):
+	filetype = get_filetype(url)
 	return {
 		'name': name,
 		'url': url,
-		'image': image,
-		'mime': mime,
-		'mime_general': mime_general,
-		'ext': ext
+		'type': filetype,
 	}

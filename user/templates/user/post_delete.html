@@ -6,8 +6,10 @@
 Are you sure you want to delete the post <strong>{{ post.title }}</strong>?
 </div>
 <h4>Preview</h4>
-<blockquote>
+<div class="card box-shadow mb-4 px-4">
 {% formatted post truncate=50 %}
-</blockquote>
+</div>
+<div class="d-flex flex-row-reverse">
 {% crispy form %}
+</div>
 {% endblock %}

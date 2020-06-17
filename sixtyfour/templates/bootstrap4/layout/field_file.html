@@ -9,7 +9,7 @@
     </div>
     <div class="form-control file-preview-container d-flex">
         <span class="file-preview" style="flex-grow: 1;">
-        {% file_preview field.value %}
+        {% file_preview field.value.name field.value.url %}
         </span>
         {% if not widget.data.required %}
         <span class="ml-2">

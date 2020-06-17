@@ -1,0 +1,15 @@
+{% load crispy_forms_tags %}
+<form action="{% url 'sixtyfour:filemanager' %}" method="post" enctype="multipart/form-data">
+<input type="hidden" name="folder" value="{{ nav_dir }}">
+{% crispy upload_form %}
+<div class="d-flex flex-row-reverse mb-3">
+<button type="submit" class="btn btn-primary">Upload Files</button>
+</div>
+</form>
+<form action="{% url 'sixtyfour:filemanager' %}" method="post">
+<input type="hidden" name="folder" value="{{ nav_dir }}">
+{% crispy folder_form %}
+<div class="d-flex flex-row-reverse mb-2">
+<button type="submit" class="btn btn-outline-secondary">Create Folder</button>
+</div>
+</form>

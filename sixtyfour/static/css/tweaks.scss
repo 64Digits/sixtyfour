@@ -3,6 +3,7 @@
 .input-group {
 	@if $enable-shadows {
 		@include box-shadow($input-box-shadow);
+		.btn,
 		.custom-file-label,
 		.form-control {
 			@include box-shadow(none);
@@ -25,4 +26,20 @@
 			@include box-shadow($inset-box-shadow);
 		}
 	}
+}
+
+.box-shadow {
+		@if $enable-shadows {
+			@include box-shadow($input-box-shadow);
+		}
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+	opacity:0.5;
+}
+
+.table-break,
+.table-break td {
+    word-wrap: break-word;
+		over-flow: break-word;
 }

@@ -6,8 +6,10 @@
 Are you sure you want to delete the comment on <strong>{{ comment.post.title }}</strong>?
 </div>
 <h4>Preview</h4>
-<blockquote>
+<div class="card box-shadow mb-4 px-4">
 {% formatted comment truncate=50 %}
-</blockquote>
+</div>
+<div class="d-flex flex-row-reverse">
 {% crispy form %}
+</div>
 {% endblock %}

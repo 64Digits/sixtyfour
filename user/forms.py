@@ -9,6 +9,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Div, Submit
 
 from django.contrib.auth.forms import PasswordChangeForm
+from django_registration.forms import RegistrationFormCaseInsensitive, RegistrationFormTermsOfService
 
 class CrispyModelForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
@@ -97,3 +98,6 @@ class FileRenameForm(forms.Form):
 
 class FileDeleteForm(forms.Form):
 	delete = forms.CharField(strip=True)
+
+class RegistrationForm(RegistrationFormCaseInsensitive, RegistrationFormTermsOfService):
+	pass

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="alert alert-danger">{{ activation_error.message }}</div>
+
+{% if activation_error.code == 'invalid_key' %}
+<h3>Your account failed to activate.</h3>
+<p>Double check that the current URL matches the URL in your email. Try selecting and copying the URL from your email rather than clicking on it directly.</p>
+{% elif activation_error.code == 'already_activated' %}
+<div class="alert alert-info">No action taken.</h3>
+{% elif activation_error.code == 'expired' %}
+<div class="alert alert-info">No action taken.</h3>
+{% elif activation_error.code == 'bad_username' %}
+<div class="alert alert-info">No action taken.</h3>
+{% endif %}
+
+{% endblock %}

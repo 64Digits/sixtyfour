@@ -1,0 +1,5 @@
+The account "{{user.username}}" at {{site.name}} requires activation. Please visit the following URL to complete the activation process:
+
+{{scheme}}://{{site.domain}}{% url 'django_registration_activate' activation_key %}
+
+If you did not register an account at {{site.name}} you may disregard this message.

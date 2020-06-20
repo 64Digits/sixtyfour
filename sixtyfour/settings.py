@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'crispy_forms',
-    'sass_processor'
+    'sass_processor',
+    'django_registration',
 ]
 
 MIDDLEWARE = [
@@ -122,6 +123,15 @@ AUTHENTICATION_BACKENDS = [
 LOGIN_URL='/login'
 LOGIN_REDIRECT_URL='/'
 LOGOUT_REDIRECT_URL='/'
+
+ACCOUNT_ACTIVATION_DAYS = 30
+REGISTRATION_SALT = 'djangoRegSalt'
+
+# Email Handling
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# NOTE: Console backend is default for development purposes only
+# In production, configure a working email backend in local_settings.py:
+# https://docs.djangoproject.com/en/3.0/topics/email/#smtp-backend
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

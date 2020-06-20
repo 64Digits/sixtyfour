@@ -20,6 +20,7 @@ from django.conf import settings
 
 from django.contrib.auth import views as auth_views
 from user.views import FrontListView, NewsListView, PostCreate, PreferencesView
+from user.urls import regpatterns
 from user.filemanager import FileManagerView
 from .views import PasswordChangeView
 
@@ -41,6 +42,7 @@ urlpatterns = [
 	path('', include(sixtyfour)),
 	path('admin/', admin.site.urls),
 	path('user/', include('user.urls')),
+	path('', include(regpatterns)),
 ] 
 
 if settings.DEBUG:

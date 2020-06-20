@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="alert alert-success">Your account is now active!</div>
+<div class="mb-5">
+	<h2>Welcome!</h2>
+	<p>Here are a few things you can do to get settled in:</p>
+	<ol>
+		<li>Visit your <a target="_blank" href="{% url 'sixtyfour:preferences' %}">preferences</a> to set up your profile, avatar and banner.</li>
+		<li>Familiarize yourself with the <a target="_blank" href="#">site rules and community guidelines</a>.</li>
+		<li>Introduce yourself in your <a target="_blank" href="{% url 'sixtyfour:submit' %}">first post to the community</a>.</li>
+	</ol>
+</div>
+<h3>Getting Help</h3>
+<p>If you have any questions or need help with the site or your account, create a post with visibility set to <q>Staff Members</q>. Your post will only be visible to active staff members.</p>
+{% endblock %}

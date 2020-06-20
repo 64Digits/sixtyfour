@@ -10,7 +10,10 @@
 <label for="id_password">Password</label>
 <input type="password" class="form-control" id="id_password" name="password">
 </div>
+<div class="d-flex justify-content-end mb-2">
+<a href="{% url 'django_registration_register' %}" class="btn btn-success mr-3">Register</a>
 <button type="submit" class="btn btn-primary" value="login">Login</button>
+</div>
 
 <input type="hidden" name="next" value="{{ next }}">
 </form>

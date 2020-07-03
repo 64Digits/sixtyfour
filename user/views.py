@@ -96,6 +96,8 @@ class PostCommentListView(WithSidebar,ListView):
 		post = get_object_or_404(Post.posts,id=self.kwargs['entry'])
 		form = CommentForm(request.POST)
 		if form.is_valid() and request.user.is_authenticated:
+			if post.locked or post.deleted:
+				raise PermissionDenied
 			entry = request.POST['entry']
 			obj = Comment.objects.create(user=request.user, post=post, entry=entry)
 
@@ -120,7 +122,9 @@ class PostUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 	form_class = PostForm
 
 	def permission_check(self, form):
-		can_edit = form.instance.user == self.request.user
+		can_edit = form.instance.user == self.request.user 
+		if not self.request.user.is_staff:
+			can_edit = can_edit and not form.instance.locked
 		if not can_edit:
 			raise PermissionDenied
 
@@ -141,6 +145,8 @@ class CommentUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 
 	def permission_check(self, form):
 		can_edit = form.instance.user == self.request.user
+		if not self.request.user.is_staff:
+			can_edit = can_edit and not form.instance.post.locked
 		if not can_edit:
 			raise PermissionDenied
 

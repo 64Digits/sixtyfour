@@ -44,7 +44,7 @@
 	</div>
 
 	<h3 class="mb-4">Comments</h3>
-	{% if user.is_authenticated %}
+	{% if user.is_authenticated and not post.locked %}
 	{% crispy form %}
 	{% endif %}
 	<div class="comments">
@@ -52,7 +52,7 @@
 	{% include "include/comment.html" %}
 	{% endfor %}
 
-	{% if user.is_authenticated and comments|length > 3 %}
+	{% if user.is_authenticated and not post.locked and comments|length > 3 %}
 	{% crispy form %}
 	{% endif %}
 	</div>

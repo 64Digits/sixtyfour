@@ -98,7 +98,6 @@ class PostCommentListView(WithSidebar,ListView):
 		if form.is_valid() and request.user.is_authenticated:
 			entry = request.POST['entry']
 			obj = Comment.objects.create(user=request.user, post=post, entry=entry)
-			print(obj)
 
 		return HttpResponseRedirect(request.get_full_path())
 

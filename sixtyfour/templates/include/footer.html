@@ -1,0 +1,11 @@
+<div class="d-flex justify-content-md-center mt-4 p-4 bg-light">
+	<nav class="nav">
+{% if link_list.footer %}
+	{% for link in link_list.footer %}
+		<a class="nav-link text-secondary" href="{{ link.url }}">{{ link.title }}</a>
+	{% endfor %}
+{% else %}
+	<a class="nav-link text-secondary" href="/">Home</a>
+{% endif %}
+	</nav>
+</div>

@@ -40,6 +40,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'user.apps.UserConfig',
+    'info.apps.InfoConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -76,6 +77,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 				'sixtyfour.context_processors.all',
+				'info.context_processors.all',
             ],
 			'builtins': ['sixtyfour.tags'],
         },

@@ -42,6 +42,7 @@ urlpatterns = [
 	path('', include(sixtyfour)),
 	path('admin/', admin.site.urls),
 	path('user/', include('user.urls')),
+	path('info/', include('info.urls')),
 	path('', include(regpatterns)),
 ] 
 

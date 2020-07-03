@@ -5,6 +5,7 @@ from django.template.defaultfilters import truncatewords_html
 
 from sixtyfour.formatters import bbcode64
 from sixtyfour.filetypes import get_filetype, get_fileicon
+from sixtyfour.utils import ObjectView
 
 from django import template
 register = template.Library()
@@ -63,6 +64,13 @@ def formatted(context, post=None, truncate=None):
 		return truncatewords_html(res, truncate)
 	else:
 		return res
+
+@register.simple_tag(takes_context=True)
+def formatted_simple(context, content):
+	ctx = {}
+	[ctx.update(c) for c in context.dicts]
+	res = bbcode64(ObjectView({'entry':content}), ctx)
+	return res
 
 @register.simple_tag()
 def file_icon(url):

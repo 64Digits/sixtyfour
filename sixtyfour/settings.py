@@ -41,6 +41,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'user.apps.UserConfig',
     'info.apps.InfoConfig',
+    'moderation.apps.ModerationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -116,11 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Legacy Password Handler
-AUTHENTICATION_BACKENDS = [
-	'user.auth.LegacyBackend',
-	'django.contrib.auth.backends.ModelBackend'
-]
+AUTHENTICATION_BACKENDS = ['user.auth.DefaultBackend']
 
 LOGIN_URL='/login'
 LOGIN_REDIRECT_URL='/'

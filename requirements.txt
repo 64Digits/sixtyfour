@@ -4,6 +4,7 @@ django-sass-processor
 django-crispy-forms
 django_compressor
 django_registration
+django-ipware
 bbcode
 markdown
 Pygments

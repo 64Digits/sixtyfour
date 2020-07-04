@@ -1,7 +1,19 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.auth.backends import ModelBackend
 from hashlib import sha1, md5
+from ipware import get_client_ip
+from moderation.models import AuthLog
 import bcrypt
+
+try:
+	from django.contrib.gis.geoip2 import GeoIP2
+except ImportError:
+	HAS_GEOIP2 = False
+else:
+	HAS_GEOIP2 = True
+	g = GeoIP2()
+
 User = get_user_model()
 
 def check_bcrypt(pw,pw_hash):
@@ -22,29 +34,30 @@ def check_badhash(pw,pw_hash):
 def check_legacy(pw,pw_hash):
 	return check_bcrypt(pw,pw_hash) or check_badhash(pw,pw_hash)
 
-# Actually mitch redo this and make it the only backend
-# Make it authenticate the user and we can control it in the future:
-# - prevent banned users logging in
-# - rate limiting, etc
-
-class LegacyBackend:
+class DefaultBackend(ModelBackend):
 	def authenticate(self, request, username=None, password=None):
 		try:
 			user = User.objects.get(username=username)
 		except User.DoesNotExist:
 			return None
 		pw_hash = user.profile.old_password
-		# This backend is only responsible for migrating passwords
-		# It always returns None to pass actual authentication through to default ModelBackend
+		# Migrate old password hash if appropriate
 		if user.password == '' and pw_hash and check_legacy(password,pw_hash):
 			user.set_password(password)
 			user.profile.old_password = ''
 			user.profile.save()
 			user.save()
-		return None
-
-	def get_user(self, user_id):
-		try:
-			return User.objects.get(pk=user_id)
-		except User.DoesNotExist:
-			return None
+		# Defer authentication to ModelBackend
+		loginuser = super().authenticate(request, username, password)
+		# Log successful login to moderation log
+		if loginuser:
+			client_ip, is_routable = get_client_ip(request)
+			if HAS_GEOIP2 and is_routable:
+				# Store GeoIP data if available
+				loc = g.city(client_ip)
+				entry = AuthLog(user=loginuser, ip_address=client_ip, city=loc['city'], region=loc['region'], country=loc['country_code'], continent=loc['continent_code'])
+				entry.save()
+			else:
+				entry = AuthLog(user=loginuser, ip_address=client_ip)
+				entry.save()
+		return loginuser

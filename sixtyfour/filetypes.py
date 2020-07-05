@@ -22,18 +22,19 @@ for filetype,extensions in file_extensions.items():
 	for ext in extensions:
 		mime_filetypes[ext] = filetype
 
-def get_filetype(url):
+def get_filetype(url,ext_only=False):
 	_, ext = os.path.splitext(url)
 	ext = ext.lower()
 	if ext in mime_filetypes:
 		return mime_filetypes[ext]
-	try:
-		mime = mimetypes.guess_type(url)[0]
-		mime_general = mime.split('/')[0]
-		if mime_general in ['text','audio','video','image']:
-			return mime_general
-	except Exception:
-		pass
+	if not ext_only:
+		try:
+			mime = mimetypes.guess_type(url)[0]
+			mime_general = mime.split('/')[0]
+			if mime_general in ['text','audio','video','image']:
+				return mime_general
+		except Exception:
+			pass
 	return 'file'
 
 def get_filetype_ext(url):

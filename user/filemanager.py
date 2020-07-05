@@ -27,7 +27,7 @@ class FileManagerView(LoginRequiredMixin,WithSidebar,TemplateView):
 		return os.path.join('users',self.request.user.username)
 
 	def allowed_filetype(self,filename):
-		uploadtype = get_filetype(filename)
+		uploadtype = get_filetype(filename, True)
 		ext, _, _ = get_filetype_ext(filename)
 		return (uploadtype != 'file' or ext == '') and not ext.lower() in ['.js', '.htm', '.html']
 

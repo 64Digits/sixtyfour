@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
+from django.utils import timezone
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -137,6 +138,7 @@ class PostUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 
 	def form_valid(self, form):
 		self.permission_check(form)
+		form.instance.updated = timezone.now()
 		return super().form_valid(form)
 
 class CommentUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
@@ -159,6 +161,7 @@ class CommentUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 
 	def form_valid(self, form):
 		self.permission_check(form)
+		form.instance.updated = timezone.now()
 		return super().form_valid(form)
 
 	def get_success_url(self):
@@ -193,6 +196,7 @@ class PostDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 				if post.user != request.user:
 					raise PermissionDenied
 				post.deleted = True
+				post.updated = timezone.now()
 				post.save()
 				redirect = reverse('user:listing', kwargs={'username':request.user.username})
 				return HttpResponseRedirect(redirect)
@@ -226,6 +230,7 @@ class CommentDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 				if comment.user != request.user:
 					raise PermissionDenied
 				comment.deleted = True
+				comment.updated = timezone.now()
 				comment.save()
 				redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':comment.post.id})
 				return HttpResponseRedirect(redirect)

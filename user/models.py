@@ -93,7 +93,7 @@ class Post(models.Model):
 	entry = models.TextField()
 
 	created = models.DateTimeField(auto_now_add=True)
-	updated = models.DateTimeField(null=True, default=None)
+	updated = models.DateTimeField(null=True, blank=True, default=None)
 
 	show_recent = models.BooleanField(default=True)
 	pinned = models.BooleanField(default=False)
@@ -164,7 +164,7 @@ class Comment(models.Model):
 	entry = models.TextField()
 
 	created = models.DateTimeField(auto_now_add=True)
-	updated = models.DateTimeField(auto_now=True)
+	updated = models.DateTimeField(null=True, blank=True, default=None)
 	
 	deleted = models.BooleanField(default=False)
 	

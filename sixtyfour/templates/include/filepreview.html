@@ -1,6 +1,6 @@
 {% if type == 'image' %}
 <div class="file-preview-image">
-	<a href="{{ url }}"><img class="img-fluid" title="{{ name }}" src="{{ url }}"/></a>
+	<a href="{{ url }}"><img class="img-fluid" loading="lazy" title="{{ name }}" src="{{ url }}"/></a>
 </div>
 {% elif type == 'audio' %}
 <div class="file-preview-audio">

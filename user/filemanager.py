@@ -12,7 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import UploadFilesForm, CreateFolderForm, FileRenameForm, FileDeleteForm
 
 from sixtyfour.sidebar import Sidebar,WithSidebar
-from sixtyfour.filetypes import get_filetype
+from sixtyfour.filetypes import get_filetype, get_filetype_ext
 from sixtyfour.storage import ensure_directory, is_subdirectory, get_fileinfo, get_filelist, safe_filename, safe_filepath
 
 class FileManagerBar(Sidebar):
@@ -25,6 +25,11 @@ class FileManagerView(LoginRequiredMixin,WithSidebar,TemplateView):
 
 	def get_basedir(self):
 		return os.path.join('users',self.request.user.username)
+
+	def allowed_filetype(self,filename):
+		uploadtype = get_filetype(filename)
+		ext, _, _ = get_filetype_ext(filename)
+		return (uploadtype != 'file' or ext == '') and not ext in ['.js', '.htm', '.html']
 
 	def with_context(self,context):
 		user = self.request.user
@@ -86,9 +91,10 @@ class FileManagerView(LoginRequiredMixin,WithSidebar,TemplateView):
 		if upload_form.is_valid():
 			files = request.FILES.getlist('files')
 			for f in files:
-				uploadname = safe_filename(f.name)
-				new_file = os.path.join(working_dir, uploadname)
-				default_storage.save(new_file, f)
+				if self.allowed_filetype(f.name):
+					uploadname = safe_filename(f.name)
+					new_file = os.path.join(working_dir, uploadname)
+					default_storage.save(new_file, f)
 
 		if folder_form.is_valid():
 			new_dirname = safe_filename(folder_form.cleaned_data['new_folder'])
@@ -105,9 +111,10 @@ class FileManagerView(LoginRequiredMixin,WithSidebar,TemplateView):
 				raise Http404
 			if not is_subdirectory(old_path, base_dir) or not is_subdirectory(new_path, base_dir):
 				raise PermissionDenied
-			old_path = default_storage.path(old_path)
-			new_path = default_storage.path(new_path)
-			os.rename(old_path,new_path)
+			if self.allowed_filetype(new_name):
+				old_path = default_storage.path(old_path)
+				new_path = default_storage.path(new_path)
+				os.rename(old_path,new_path)
 
 		if file_delete_form.is_valid():
 			delete_name = file_delete_form.cleaned_data['delete']

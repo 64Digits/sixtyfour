@@ -29,7 +29,7 @@ class FileManagerView(LoginRequiredMixin,WithSidebar,TemplateView):
 	def allowed_filetype(self,filename):
 		uploadtype = get_filetype(filename)
 		ext, _, _ = get_filetype_ext(filename)
-		return (uploadtype != 'file' or ext == '') and not ext in ['.js', '.htm', '.html']
+		return (uploadtype != 'file' or ext == '') and not ext.lower() in ['.js', '.htm', '.html']
 
 	def with_context(self,context):
 		user = self.request.user

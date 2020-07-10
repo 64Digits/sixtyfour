@@ -53,11 +53,14 @@ class DefaultBackend(ModelBackend):
 		if loginuser:
 			client_ip, is_routable = get_client_ip(request)
 			if HAS_GEOIP2 and is_routable:
-				# Store GeoIP data if available
-				loc = g.city(client_ip)
-				entry = AuthLog(user=loginuser, ip_address=client_ip, city=loc['city'], region=loc['region'], country=loc['country_code'], continent=loc['continent_code'])
-				entry.save()
-			else:
-				entry = AuthLog(user=loginuser, ip_address=client_ip)
-				entry.save()
+				try:
+					# Store GeoIP data if available
+					loc = g.city(client_ip)
+					entry = AuthLog(user=loginuser, ip_address=client_ip, city=loc['city'], region=loc['region'], country=loc['country_code'], continent=loc['continent_code'])
+					entry.save()
+					return loginuser
+				except:
+					pass
+			entry = AuthLog(user=loginuser, ip_address=client_ip)
+			entry.save()
 		return loginuser

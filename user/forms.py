@@ -106,6 +106,7 @@ class RegistrationForm(RegistrationFormCaseInsensitive, RegistrationFormTermsOfS
 bulk_actions = [
 	('visible_only_me','Set Visible to Only Me'),
 	('visible_registered','Set Visible to Registered Users'),
+	('visible_regular','Set Visible to Regular Users'),
 	('visible_public','Set Visible to Public'),
 	('visible_staff','Set Visible to Staff'),
 	('delete','Delete Posts (NO UNDO)'),

@@ -285,6 +285,8 @@ class ManagePostsView(LoginRequiredMixin,WithSidebar,TemplateView):
 			posts.update(private=PostVisibility.PERSONAL)
 		elif action == 'visible_registered':
 			posts.update(private=PostVisibility.REGISTERED)
+		elif action == 'visible_regular':
+			posts.update(private=PostVisibility.REGULAR)
 		elif action == 'visible_public':
 			posts.update(private=PostVisibility.PUBLIC)
 		elif action == 'visible_staff':

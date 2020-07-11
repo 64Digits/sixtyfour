@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+<h2>Manage Posts</h3>
+<div class="alert alert-info" role="alert">
+Select posts you wish to update along with your desired action.
+Need to make a LOT of changes fast? Consider using the <a href="#bulk_by_date" class="alert-link">Bulk Management By Date</a> form instead.
+</div>
+<form method="POST">
+<table class="table table-sm">
+	<tr>
+		<th>Post</th>
+		<th></th>
+		<th>Created</th>
+		<th>Visibility</th>
+	</tr>
+{% for post in posts %}
+{% url 'user:post' post.user post.id as post_url %}
+<tr>
+	<td>
+		<div class="custom-control custom-checkbox">
+			<input type="checkbox" class="custom-control-input" name="posts" id="id_posts_{{forloop.counter}}" value="{{post.id}}"/>
+			<label class="custom-control-label hidden" for="id_posts_{{forloop.counter}}">{{post.title}}</label>
+		</div>
+	</td>
+	<td>
+		<a href="{{post_url}}" target="_blank">🔗️</a>
+	</td>
+	<td>
+		{{post.created|date:"Y-m-d H:i:s"}}
+	</td>
+	<td>
+			{% if post.locked %}
+				<span class="placeholder-icon-lock">🔒</span>
+			{% endif %}
+
+			{% if post.pinned %}
+				<span class="placeholder-icon-pinned">📌</span>
+			{% endif %}
+
+			{% if post.private %}
+				<span class="placeholder-icon-private">👀</span>
+				<span class="text-info font-italic">{{ post.visible_description }}</span>
+			{% endif %}
+			{% if post.private == 0 %}
+				<span class="text-secondary font-italic">Public</span>
+			{% endif %}
+	</td>
+</tr>
+{% endfor %}
+</table>
+<hr/>
+{% crispy form %}
+<hr/>
+</form>
+<h3 id="bulk_by_date">Bulk Management By Date</h3>
+<div class="alert alert-warning" role="alert">
+	The following form will automatically apply actions to posts created before a given timestamp. Handle with care, the default timestamp is <strong>NOW</strong> and will affect <i>all of your posts</i> if unchanged.
+</div>
+{% crispy bydateform %}
+{% endblock %}

@@ -19,7 +19,7 @@ from django.conf.urls.static import static
 from django.conf import settings
 
 from django.contrib.auth import views as auth_views
-from user.views import FrontListView, NewsListView, PostCreate, PreferencesView
+from user.views import FrontListView, NewsListView, PostCreate, PreferencesView, ManagePostsView
 from user.urls import regpatterns
 from user.filemanager import FileManagerView
 from .views import PasswordChangeView
@@ -34,6 +34,7 @@ sixtyfour = ([
 	path('submit', PostCreate.as_view(), name='submit'),
 	path('preferences', PreferencesView.as_view(), name='preferences'),
 	path('filemanager', FileManagerView.as_view(), name='filemanager'),
+	path('manage/posts', ManagePostsView.as_view(), name='manage_posts'),
 	path('preferences/password_change', PasswordChangeView.as_view(template_name='registration/password_change.html'), name='password_change'),
 	path('preferences/password_change_done', auth_views.PasswordChangeView.as_view(template_name='registration/password_change_done.html'), name='password_change_done'),
 ], 'sixtyfour')

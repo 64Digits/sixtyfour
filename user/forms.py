@@ -1,12 +1,13 @@
 from django import forms
 from django.urls import reverse
-from django.forms import Textarea
+from django.forms import Textarea,CheckboxSelectMultiple
 
 from .models import Post, Comment, Profile
 from django.contrib.auth import get_user_model
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Submit
+from crispy_forms.layout import Div, Layout, Submit
+from crispy_forms.bootstrap import InlineField
 
 from django.contrib.auth.forms import PasswordChangeForm
 from django_registration.forms import RegistrationFormCaseInsensitive, RegistrationFormTermsOfService
@@ -101,3 +102,33 @@ class FileDeleteForm(forms.Form):
 
 class RegistrationForm(RegistrationFormCaseInsensitive, RegistrationFormTermsOfService):
 	pass
+
+bulk_actions = [
+	('visible_only_me','Set Visible to Only Me'),
+	('visible_registered','Set Visible to Registered Users'),
+	('visible_public','Set Visible to Public'),
+	('visible_staff','Set Visible to Staff'),
+	('delete','Delete Posts (NO UNDO)'),
+]
+
+class UserManagePostsForm(CrispyForm):
+	posts = forms.ModelMultipleChoiceField(queryset=None,widget=CheckboxSelectMultiple)
+	action = forms.ChoiceField(choices=bulk_actions)
+	def __init__(self, user, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.fields['posts'].queryset = Post.posts_visible(user).filter(user=user)
+		self.helper.form_tag = False
+		self.helper.field_template = 'bootstrap4/layout/inline_field.html'
+		self.helper.layout = Div(Layout(
+				InlineField('action', css_class='flex-grow-1'),
+				Submit('submit', 'Update Posts', css_class='btn-primary ml-3'),
+		),css_class='form-inline justify-content-end')
+
+from django.utils import timezone
+class UserManagePostsByDateForm(CrispyForm):
+	older_than = forms.DateTimeField(initial=timezone.now)
+	action = forms.ChoiceField(choices=bulk_actions)
+	confirm = forms.BooleanField(initial=False, required=True)
+	def __init__(self, *args, **kwargs):
+		super().__init__(*args, **kwargs)
+		self.helper.add_input(Submit('submit', 'Update Posts', css_class='btn-primary'))

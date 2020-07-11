@@ -13,8 +13,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from crispy_forms.layout import Div, Submit
 
-from .models import Post, Comment, Profile
-from .forms import PostForm, CommentForm, ConfirmDeleteForm, UserForm, UserProfileForm
+from .models import Post, Comment, Profile, PostVisibility
+from .forms import PostForm, CommentForm, ConfirmDeleteForm, UserForm, UserProfileForm, UserManagePostsForm, UserManagePostsByDateForm
 
 from sixtyfour.sidebar import Sidebar,WithSidebar
 
@@ -262,3 +262,53 @@ class PreferencesView(LoginRequiredMixin,WithSidebar,TemplateView):
 			uf.save()
 			redirect = reverse('user:listing', kwargs={'username':request.user.username})
 			return HttpResponseRedirect(redirect)
+
+
+class ManagePostsView(LoginRequiredMixin,WithSidebar,TemplateView):
+	template_name = 'user/manage_posts.html'
+	sidebars = [ProfileBar()]
+
+	def with_context(self,context):
+		user = self.request.user
+		uf = UserManagePostsForm(user)
+		ufd = UserManagePostsByDateForm()
+		posts = uf.fields['posts'].queryset
+		return {
+			'op': user,
+			'posts':posts,
+			'form':uf,
+			'bydateform':ufd
+		}
+
+	def update_posts(self, action, posts):
+		if action == 'visible_only_me':
+			posts.update(private=PostVisibility.PERSONAL)
+		elif action == 'visible_registered':
+			posts.update(private=PostVisibility.REGISTERED)
+		elif action == 'visible_public':
+			posts.update(private=PostVisibility.PUBLIC)
+		elif action == 'visible_staff':
+			posts.update(private=PostVisibility.STAFF)
+		elif action == 'delete':
+			posts.update(deleted=True)
+
+	def post(self, request, *args, **kwargs):
+		user = self.request.user
+		uf = UserManagePostsForm(user,request.POST)
+		ufd = UserManagePostsByDateForm(request.POST)
+		if uf.is_valid():
+			action = uf.cleaned_data['action']
+			posts = uf.cleaned_data['posts']
+			self.update_posts(action, posts)
+			redirect = reverse('sixtyfour:manage_posts')
+			return HttpResponseRedirect(redirect)
+		elif ufd.is_valid():
+			action = ufd.cleaned_data['action']
+			older_than = ufd.cleaned_data['older_than']
+			user = self.request.user
+			posts = Post.posts_visible(user).filter(user=user)
+			posts = posts.filter(created__lte=older_than)
+			self.update_posts(action, posts)
+			redirect = reverse('sixtyfour:manage_posts')
+			return HttpResponseRedirect(redirect)
+		return super().get(self, request, *args, **kwargs)

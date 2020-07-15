@@ -219,7 +219,9 @@ def bb64_hide(primary_reason=None, show=False, header_class='', button_class='te
 	return bb64_hide_internal
 
 def bb64_user(tag_name, value, options, parent, context):
-	user = value if value else ''
+	user = ''
+	if 'user' in options:
+		user = options ['user']
 	return format_html('<a href="/user/{user}">{user}</a>', user=user)
 
 def bb64_profile(tag_name, value, options, parent, context):
@@ -389,7 +391,7 @@ def ExtendedParser(*args, **kwargs):
 	bind('spoiler', bb64_hide("Spoiler: ", header_class='bg-dark', button_class='text-white'), swallow_trailing_newline=True)
 	bind('shh', bb64_shh, swallow_trailing_newline=True)
 	bind('blind', bb64_blind, swallow_trailing_newline=True)
-	bind('user', bb64_user)
+	bind('user', bb64_user,standalone=True)
 	bind('profile', bb64_profile, standalone=True)
 	bind('h5audio', bb64_h5audio, replace_links=False)
 	bind('h5video', bb64_h5video, replace_links=False)

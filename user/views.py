@@ -5,7 +5,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormVi
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 
 from django.contrib.auth import get_user_model
@@ -13,10 +13,29 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from crispy_forms.layout import Div, Submit
 
+from datetime import datetime;
+
 from .models import Post, Comment, Profile, PostVisibility
 from .forms import PostForm, CommentForm, ConfirmDeleteForm, UserForm, UserProfileForm, UserManagePostsForm, UserManagePostsByDateForm
 
 from sixtyfour.sidebar import Sidebar,WithSidebar
+
+import json
+
+from rest_framework import viewsets, permissions
+from .models import PostSerializer
+from rest_framework.response import Response
+
+class RecentActivityList(viewsets.ReadOnlyModelViewSet):
+	"""
+	API endpoint for getting recent activity
+	"""
+	def list(self, request):
+		user = self.request.user
+		posts = Post.posts_recent(user).filter(show_recent=True)[:10]
+		serializer = PostSerializer(posts, many=True)
+		return Response(serializer.data)		
+
 
 class WelcomeBar(Sidebar):
 	name = "welcome"
@@ -101,6 +120,8 @@ class PostCommentListView(WithSidebar,ListView):
 				raise PermissionDenied
 			entry = request.POST['entry']
 			obj = Comment.objects.create(user=request.user, post=post, entry=entry)
+			post.interacted = datetime.now()
+			post.save()
 
 		return HttpResponseRedirect(request.get_full_path())
 

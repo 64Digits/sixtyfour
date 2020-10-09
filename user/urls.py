@@ -1,10 +1,14 @@
 
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 from django.views.generic.base import TemplateView
 from django_registration.backends.activation import views as reg_views
 from .forms import RegistrationForm
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'recent_activity', views.RecentActivityList, basename='recent')
 
 app_name = "user"
 
@@ -17,6 +21,7 @@ urlpatterns = [
 	path('comment/<int:pk>/edit', views.CommentUpdate.as_view(), name='comment_edit'),
 	path('<username>/post/<int:pk>/delete', views.PostDelete.as_view(), name='post_delete'),
 	path('comment/<int:pk>/delete', views.CommentDelete.as_view(), name='comment_delete'),
+	path('api/recent_activity/get', views.RecentActivityList.as_view({'get':'list'}), name="recent_activity")
 ]
 
 regpatterns = [

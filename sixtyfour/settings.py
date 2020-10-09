@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'crispy_forms',
     'sass_processor',
     'django_registration',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [

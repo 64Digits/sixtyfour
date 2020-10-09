@@ -61,3 +61,19 @@
 
 {% endif %}
 {% endblock %}
+
+{% block scripts %}
+<script>
+	// Set some local metadata here to keep mostly keep track of read/unread posts on the front page.
+	const url = "{{post.url}}";
+	console.log("Old values:");
+	console.log("Comments Count: ", localStorage.getItem(`${url}:comments_count`));
+	console.log("Interacted: ", localStorage.getItem(`${url}:interacted`));
+	localStorage.setItem(`${url}:interacted`, "{{post.interacted}}");
+	localStorage.setItem(`${url}:comments_count`, "{{post.comments_count}}");
+
+	console.log("Set values to:");
+	console.log("Comments Count: ", localStorage.getItem(`${url}:comments_count`));
+	console.log("Interacted: ", localStorage.getItem(`${url}:interacted`));
+</script>
+{% endblock %}

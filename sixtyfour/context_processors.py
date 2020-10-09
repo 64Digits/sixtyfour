@@ -1,5 +1,5 @@
 from django.conf import settings
-from user.views import LoginBar, LoggedInBar
+from user.views import LoginBar, LoggedInBar, RecentActivityBar
 
 def site_branding(request):
 	return {
@@ -14,6 +14,10 @@ def sidebars(request):
 	else:
 		if request.resolver_match.view_name != 'sixtyfour:login':
 			global_sidebar.append(LoginBar())
+	
+	# Add in the Recent Activity widget here
+	global_sidebar.append(RecentActivityBar())
+
 	return {
 		'global_sidebar': global_sidebar
 	}

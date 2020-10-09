@@ -36,6 +36,10 @@ class LoggedInBar(Sidebar):
 	name = "loggedin"
 	title = "Actions"
 
+class RecentActivityBar(Sidebar):
+	name = "recentactivity"
+	title = "Recent Activity"
+
 class FrontListView(WithSidebar,ListView):
 	template_name = 'user/home.html'	
 	context_object_name = 'posts'

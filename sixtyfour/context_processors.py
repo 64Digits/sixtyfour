@@ -16,8 +16,9 @@ def sidebars(request):
 			global_sidebar.append(LoginBar())
 	
 	# Add in the Recent Activity widget here
-	global_sidebar.append(RecentActivityBar())
-
+	if request.resolver_match.view_name == 'sixtyfour:front':
+		global_sidebar.append(RecentActivityBar())
+	
 	return {
 		'global_sidebar': global_sidebar
 	}

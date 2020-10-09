@@ -95,7 +95,7 @@ class Post(models.Model):
 
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(null=True, blank=True, default=None)
-	interacted = models.DateTimeField(auto_now_add=True)
+	interacted = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 	show_recent = models.BooleanField(default=True)
 	pinned = models.BooleanField(default=False)

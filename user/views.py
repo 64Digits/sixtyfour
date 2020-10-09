@@ -20,23 +20,6 @@ from .forms import PostForm, CommentForm, ConfirmDeleteForm, UserForm, UserProfi
 
 from sixtyfour.sidebar import Sidebar,WithSidebar
 
-import json
-
-from rest_framework import viewsets, permissions
-from .models import PostSerializer
-from rest_framework.response import Response
-
-class RecentActivityList(viewsets.ReadOnlyModelViewSet):
-	"""
-	API endpoint for getting recent activity
-	"""
-	def list(self, request):
-		user = self.request.user
-		posts = Post.posts_recent(user).filter(show_recent=True)[:10]
-		serializer = PostSerializer(posts, many=True)
-		return Response(serializer.data)		
-
-
 class WelcomeBar(Sidebar):
 	name = "welcome"
 	title = "Welcome"
@@ -183,6 +166,7 @@ class CommentUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 	def form_valid(self, form):
 		self.permission_check(form)
 		form.instance.updated = timezone.now()
+		form.instance.interacted = timezone.now()
 		return super().form_valid(form)
 
 	def get_success_url(self):
@@ -218,6 +202,7 @@ class PostDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 					raise PermissionDenied
 				post.deleted = True
 				post.updated = timezone.now()
+				post.interacted = timezone.now()
 				post.save()
 				redirect = reverse('user:listing', kwargs={'username':request.user.username})
 				return HttpResponseRedirect(redirect)
@@ -251,7 +236,7 @@ class CommentDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 				if comment.user != request.user:
 					raise PermissionDenied
 				comment.deleted = True
-				comment.updated = timezone.now()
+				comment.updated = timezone.now()				
 				comment.save()
 				redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':comment.post.id})
 				return HttpResponseRedirect(redirect)

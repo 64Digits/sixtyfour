@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.dispatch import receiver
 from sixtyfour.formatters import bbcode64
 import datetime, hashlib, os
-from rest_framework import serializers
+
 
 def get_sentinel_user():
 	return get_user_model().objects.get_or_create(username='deleted')[0]
@@ -141,12 +141,9 @@ class Post(models.Model):
 		return query
 
 	@staticmethod
-	def posts_visible(user, sort_by_updated=False):
+	def posts_visible(user):
 		query = Post.get_post_query(user)
-		if sort_by_updated:
-			return Post.posts.filter(query).order_by('interacted').reverse()
-		else:
-			return Post.posts.filter(query)
+		return Post.posts.filter(query)
 
 	@staticmethod
 	def posts_recent(user):
@@ -206,7 +203,3 @@ class Comment(models.Model):
 	class Meta:
 		ordering = ['created']
 
-class PostSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = Post
-		fields = ['interacted', 'updated', 'title', 'id', 'url']

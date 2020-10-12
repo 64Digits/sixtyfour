@@ -9,4 +9,5 @@
 /npm-debug.log
 /package-lock.json
 /sixtyfour/static/compiled/css/*.*
+/sixtyfour/static/compiled/js/*.*
 .cache

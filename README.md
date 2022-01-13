@@ -1,12 +1,9 @@
 # 64Digits/sixtyfour
 
-This repository contains the source code to the 64Digits website.
+This repository contains the source code to `sixtyfour` which powers the 64Digits website.
 
-## Dependencies
-Python dependencies are defined in requirements.txt and can be installed by running `pip install -r requirements.txt`.
+## Getting Started
 
-## SCSS Dependencies
-SCSS compilation requires Autoprefixer to be available on the CLI.
-The easiest way to do this is to install `npx` globally via `npm`,
-then run `npm install` in the root of the repo to install the
-dependencies (`postcss-cli` and `autoprefixer`)
+`sixtyfour` is based on Django. Both projects are inclined towards providing a rapid development environment out of the box. To get started as quickly as possible, follow the steps laid out in the [Dev Environment Setup Guide](INSTALL_DEV.md).
+
+For detailed instructions on running `sixtyfour` in production, see the [Production Environment Setup Guide](INSTALL_PROD.md).

@@ -149,6 +149,28 @@ class PostUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 		form.instance.updated = timezone.now()
 		return super().form_valid(form)
 
+class PlusOnePost(LoginRequiredMixin,WithSidebar,UpdateView):
+	model = Post
+	fields = []
+
+	def get(self, request, *args, **kwargs):
+		post = get_object_or_404(Post.posts,id=self.kwargs['pk'])
+		if not post.user_can_view(self.request.user):
+			raise PermissionDenied
+		post.add_plusone(request.user)
+		redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':self.kwargs['pk']})
+		return HttpResponseRedirect(redirect)
+
+class PlusOneComment(LoginRequiredMixin,WithSidebar,UpdateView):
+	model = Comment
+	fields = []
+
+	def get(self, request, *args, **kwargs):
+		comment = get_object_or_404(Comment.comments,id=self.kwargs['pk'])
+		comment.add_plusone(request.user)
+		redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':self.kwargs['postid']})
+		return HttpResponseRedirect(redirect)
+
 class CommentUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 	model = Comment
 	form_class = CommentForm

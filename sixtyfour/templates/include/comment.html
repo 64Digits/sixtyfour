@@ -36,6 +36,9 @@
 						<a class="btn btn-sm btn-outline-secondary" href="{% url 'user:comment_edit' pk=comment.id %}">Edit</a>
 						<a class="btn btn-sm btn-outline-secondary" href="{% url 'user:comment_delete' pk=comment.id %}">Delete</a>
 					{% endif %}
+					{% if request.user.is_authenticated %}
+					<a class="btn btn-sm btn-outline-secondary" title="{{comment.plusone_users}}" href="{% url 'user:plus_one_comment' username=request.user.username pk=comment.id postid=post.id %}">+{{ comment.plusone_count }}</a>
+					{% endif %}
 					</div>
 				</div>
 			</div>

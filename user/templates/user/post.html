@@ -38,7 +38,10 @@
 		<div class="btn-group" role="group" aria-label="Post Actions">
 		{% if post.user == request.user %}
 			<a class="btn btn-sm btn-outline-secondary" href="{% url 'user:post_edit' username=post.user.username pk=post.id %}">Edit</a>
-			<a class="btn btn-sm btn-outline-secondary" href="{% url 'user:post_delete' username=post.user.username pk=post.id %}">Delete</a>
+			<a class="btn btn-sm btn-outline-secondary" href="{% url 'user:post_delete' username=post.user.username pk=post.id %}">Delete</a>			
+		{% endif %}
+		{% if user.is_authenticated and not post.locked %}
+		<a class="btn btn-sm btn-outline-secondary" title="{{post.plusone_users}}" href="{% url 'user:plus_one_post' username=request.user.username pk=post.id %}">+{{ post.plusone_count }}</a>
 		{% endif %}
 		</div>
 	</div>

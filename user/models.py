@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from sixtyfour.formatters import bbcode64
 import datetime, hashlib, os
 
+
 def get_sentinel_user():
 	return get_user_model().objects.get_or_create(username='deleted')[0]
 
@@ -31,7 +32,7 @@ class Profile(models.Model):
 	location = models.CharField(max_length=40, blank=True)
 	hit_counter = models.IntegerField()
 	old_password = models.CharField(max_length=512, blank=True, default='')
-	
+
 	user = models.OneToOneField(
 		get_user_model(),
 		on_delete = models.CASCADE,
@@ -94,6 +95,7 @@ class Post(models.Model):
 
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(null=True, blank=True, default=None)
+	interacted = models.DateTimeField(auto_now_add=True, null=True, blank=True)
 
 	show_recent = models.BooleanField(default=True)
 	pinned = models.BooleanField(default=False)
@@ -119,8 +121,13 @@ class Post(models.Model):
 	def get_absolute_url(self):
 		return reverse('user:post', kwargs={'username': self.user.username, 'entry': self.id})
 
+	@property
+	def url(self):
+		return self.get_absolute_url()
+
 	@staticmethod
-	def posts_visible(user):
+	def get_post_query(user):
+		query = None
 		if user.is_authenticated:
 			if user.is_staff:
 				query = Q(private__lte=PostVisibility.STAFF)
@@ -131,7 +138,17 @@ class Post(models.Model):
 			query = query | Q(user=user)
 		else:
 			query = Q(private=PostVisibility.PUBLIC)
+		return query
+
+	@staticmethod
+	def posts_visible(user):
+		query = Post.get_post_query(user)
 		return Post.posts.filter(query)
+
+	@staticmethod
+	def posts_recent(user):
+		query = Post.get_post_query(user)
+		return Post.posts.filter(query).order_by('interacted').reverse()
 
 	def user_can_view(self, user):
 		visible = (self.private == PostVisibility.PUBLIC)
@@ -165,9 +182,9 @@ class Comment(models.Model):
 
 	created = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(null=True, blank=True, default=None)
-	
+
 	deleted = models.BooleanField(default=False)
-	
+
 	post = models.ForeignKey(Post, on_delete=models.CASCADE)
 	user = models.ForeignKey(
 		get_user_model(),
@@ -185,3 +202,4 @@ class Comment(models.Model):
 
 	class Meta:
 		ordering = ['created']
+

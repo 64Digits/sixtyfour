@@ -23,6 +23,7 @@ from user.views import FrontListView, NewsListView, PostCreate, PreferencesView,
 from user.urls import regpatterns
 from user.filemanager import FileManagerView
 from .views import PasswordChangeView
+from user.api_router import api_routes
 
 sixtyfour = ([
 	path('', FrontListView.as_view(), name='front'),
@@ -44,6 +45,7 @@ urlpatterns = [
 	path('admin/', admin.site.urls),
 	path('user/', include('user.urls')),
 	path('info/', include('info.urls')),
+	path('v5/', include(api_routes)),
 	path('', include(regpatterns)),
 ] 
 

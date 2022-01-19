@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "lib": ["ES6", "DOM"],
+        "target": "ES5",
+        "esModuleInterop": true,
+        "sourceMap": true
+    },
+    "include": ["frontend/**/*.ts", "frontend/**/*.vue", "./vue-shims.d.ts"],
+    "exclude": ["node_modules", "sixtyfour", "user", "info", "moderation"]
+}

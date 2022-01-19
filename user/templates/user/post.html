@@ -61,3 +61,12 @@
 
 {% endif %}
 {% endblock %}
+
+{% block scripts %}
+<script>
+	// Set some local metadata here to keep mostly keep track of read/unread posts on the front page.
+	const url = "{{post.url}}";
+	localStorage.setItem(`${url}:interacted`, "{{post.interacted}}");
+	localStorage.setItem(`${url}:comments_count`, "{{post.comments_count}}");
+</script>
+{% endblock %}

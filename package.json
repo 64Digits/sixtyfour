@@ -1,14 +1,36 @@
 {
-  "name": "sixtyfour",
-  "description": "The Site Code for 64Digits.com",
-  "version": "1.0.0",
-  "dependencies": {},
-  "devDependencies": {
-    "@fancyapps/fancybox": "^3.5.7",
-    "autoprefixer": "^9.6.1",
-    "bootstrap": "^4.3.1",
-    "jquery": "^3.4.1",
-    "popper.js": "^1.15.0",
-    "postcss-cli": "^6.1.3"
-  }
+    "name": "sixtyfour",
+    "description": "The Site Code for 64Digits.com",
+    "version": "1.0.0",
+    "dependencies": {
+        "axios": "^0.20.0",
+        "luxon": "^1.25.0",
+        "vue": "^2.6.12",
+        "vue-hot-reload-api": "^2.3.4"
+    },
+    "devDependencies": {
+        "@fancyapps/fancybox": "^3.5.7",
+        "@types/luxon": "^1.25.0",
+        "@typescript-eslint/eslint-plugin": "^4.4.0",
+        "@typescript-eslint/parser": "^4.4.0",
+        "@vue/component-compiler-utils": "^3.2.0",
+        "autoprefixer": "^9.6.1",
+        "bootstrap": "^4.3.1",
+        "cross-env": "^7.0.2",
+        "eslint": "^7.10.0",
+        "jquery": "^3.4.1",
+        "popper.js": "^1.15.0",
+        "postcss-cli": "^6.1.3",
+        "prettier": "^2.1.2",
+        "rimraf": "^3.0.2",
+        "sass": "^1.27.0",
+        "typescript": "^4.0.3",
+        "vue-template-compiler": "^2.6.12"
+    },
+    "scripts": {
+        "frontend:clean": "rimraf ./sixtyfour/static/compiled/js/*",
+        "frontend:watch": "npx parcel watch ./frontend/*.ts --out-dir ./sixtyfour/static/compiled/js/",
+        "frontend:build": "rimraf ./sixtyfour/static/compiled/js/* && cross-env NODE_ENV=production npx parcel build ./frontend/*.ts --out-dir ./sixtyfour/static/compiled/js/ --no-source-maps",
+        "linter": "eslint . --ext .js"
+    }
 }

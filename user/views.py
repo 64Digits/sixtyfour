@@ -5,13 +5,15 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView, FormVi
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 from crispy_forms.layout import Div, Submit
+
+from datetime import datetime;
 
 from .models import Post, Comment, Profile, PostVisibility
 from .forms import PostForm, CommentForm, ConfirmDeleteForm, UserForm, UserProfileForm, UserManagePostsForm, UserManagePostsByDateForm
@@ -33,6 +35,10 @@ class LoginBar(Sidebar):
 class LoggedInBar(Sidebar):
 	name = "loggedin"
 	title = "Actions"
+
+class RecentActivityBar(Sidebar):
+	name = "recentactivity"
+	title = "Recent Activity"
 
 class FrontListView(WithSidebar,ListView):
 	template_name = 'user/home.html'	
@@ -101,6 +107,8 @@ class PostCommentListView(WithSidebar,ListView):
 				raise PermissionDenied
 			entry = request.POST['entry']
 			obj = Comment.objects.create(user=request.user, post=post, entry=entry)
+			post.interacted = datetime.now()
+			post.save()
 
 		return HttpResponseRedirect(request.get_full_path())
 
@@ -162,6 +170,7 @@ class CommentUpdate(LoginRequiredMixin,WithSidebar,UpdateView):
 	def form_valid(self, form):
 		self.permission_check(form)
 		form.instance.updated = timezone.now()
+		form.instance.interacted = timezone.now()
 		return super().form_valid(form)
 
 	def get_success_url(self):
@@ -197,6 +206,7 @@ class PostDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 					raise PermissionDenied
 				post.deleted = True
 				post.updated = timezone.now()
+				post.interacted = timezone.now()
 				post.save()
 				redirect = reverse('user:listing', kwargs={'username':request.user.username})
 				return HttpResponseRedirect(redirect)
@@ -230,7 +240,7 @@ class CommentDelete(LoginRequiredMixin,WithSidebar,TemplateView):
 				if comment.user != request.user:
 					raise PermissionDenied
 				comment.deleted = True
-				comment.updated = timezone.now()
+				comment.updated = timezone.now()				
 				comment.save()
 				redirect = reverse('user:post', kwargs={'username':request.user.username, 'entry':comment.post.id})
 				return HttpResponseRedirect(redirect)

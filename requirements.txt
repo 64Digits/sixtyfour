@@ -5,6 +5,7 @@ django-crispy-forms
 django_compressor
 django_registration
 django-ipware
+djangorestframework
 bbcode
 markdown
 Pygments

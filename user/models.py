@@ -1,3 +1,4 @@
+from asyncore import write
 from django.db import models
 from django.db.models import Q
 from django.db.models.signals import post_save
@@ -118,6 +119,32 @@ class Post(models.Model):
 	def comments_count(self):
 		return Comment.comments.filter(post=self).count()
 
+	@property
+	def plusone_count(self):
+		return PlusOne.plus_ones.filter(targetPost=self).count()
+
+	@property
+	def plusone_users(self):
+		results = PlusOne.plus_ones.filter(targetPost=self)[:2]
+		count = self.plusone_count
+		
+		def get_names(p):
+			return p.user.username
+
+		names = ", ".join(map(get_names, results))
+
+		title = f'This post was +1\'d by {names}'
+		if results.count() < count:
+			title += f' and {count-2} more...'
+
+		return title
+
+	def add_plusone(self, user):
+		existing = PlusOne.plus_ones.filter(user=user,targetPost=self).count() > 0
+		if not existing and user.is_authenticated:
+			plus = PlusOne(targetType=PlusOne.TargetType.POST, targetPost=self, user=user)
+			plus.save()
+
 	def get_absolute_url(self):
 		return reverse('user:post', kwargs={'username': self.user.username, 'entry': self.id})
 
@@ -139,7 +166,7 @@ class Post(models.Model):
 		else:
 			query = Q(private=PostVisibility.PUBLIC)
 		return query
-
+		
 	@staticmethod
 	def posts_visible(user):
 		query = Post.get_post_query(user)
@@ -197,9 +224,51 @@ class Comment(models.Model):
 	objects = models.Manager()
 
 	@property
+	def plusone_count(self):
+		return PlusOne.plus_ones.filter(targetComment=self).count()
+
+	@property
+	def plusone_users(self):
+		results = PlusOne.plus_ones.filter(targetComment=self)[:2]
+		count = self.plusone_count
+		
+		def get_names(p):
+			return p.user.username
+
+		names = ", ".join(map(get_names, results))
+
+		title = f'This comment was +1\'d by {names}'
+		if results.count() < count:
+			title += f' and {count-2} more...'
+
+		return title
+
+	def add_plusone(self, user):
+		existing = PlusOne.plus_ones.filter(user=user,targetComment=self).count() > 0
+		if not existing and user.is_authenticated:
+			plus = PlusOne(targetType=PlusOne.TargetType.COMMENT, targetComment=self, user=user)
+			plus.save()
+
+	@property
 	def children(self):
 		return self.comment_set.all()
 
 	class Meta:
 		ordering = ['created']
 
+class PlusOneManager(models.Manager):
+	def get_queryset(self):
+		return super().get_queryset()
+
+class PlusOne(models.Model):
+	class TargetType(models.IntegerChoices):
+		COMMENT = 1
+		POST = 2
+
+	targetType = models.IntegerField(choices=TargetType.choices)
+	targetPost = models.ForeignKey(Post, on_delete=models.DO_NOTHING, blank=True, null=True, default=None)
+	targetComment = models.ForeignKey(Comment, on_delete=models.DO_NOTHING, blank=True, null=True, default=None)
+	user = models.ForeignKey(get_user_model(), on_delete=models.SET(get_sentinel_user))
+
+	plus_ones = PlusOneManager()
+	objects = models.Manager()
